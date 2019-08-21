@@ -16,26 +16,26 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // const getPlayersResults = this.getPlayers()
-    // const getScheduleResults = this.getSchedule()
-    // const fixtures = getScheduleResults["fixtures"]
-    // const oppGF = getScheduleResults["oppGF"]
-    // const oppGA = getScheduleResults["oppGA"]
-    // const gf = getScheduleResults["gf"]
-    // const ga = getScheduleResults["ga"]
-    // this.setState({
-    //   playersDict: getPlayersResults,
-    //   fixtures: fixtures,
-    //   oppGF: oppGF,
-    //   oppGA: oppGA,
-    //   gf: gf,
-    //   ga: ga
-    // })
+    const getPlayersResults = this.getPlayers()
+    const getScheduleResults = this.getSchedule()
+    const fixtures = getScheduleResults["fixtures"]
+    const oppGF = getScheduleResults["oppGF"]
+    const oppGA = getScheduleResults["oppGA"]
+    const gf = getScheduleResults["gf"]
+    const ga = getScheduleResults["ga"]
+    this.setState({
+      playersDict: getPlayersResults,
+      fixtures: fixtures,
+      oppGF: oppGF,
+      oppGA: oppGA,
+      gf: gf,
+      ga: ga
+    })
   }
 
   getPlayers = () => {
     let playersDict = {}
-    fetch("https://fantasy.premierleague.com/api/bootstrap-static/")
+    fetch("https://cors-anywhere.herokuapp.com/https://fantasy.premierleague.com/api/bootstrap-static/")
     .then((response) => {
       console.log(response);
       if (!response.ok) throw Error(response.statusText);
@@ -182,7 +182,7 @@ class App extends Component {
         "WOL": 0
       }
     }
-    fetch("https://fantasy.premierleague.com/api/fixtures/")
+    fetch("https://cors-anywhere.herokuapp.com/https://fantasy.premierleague.com/api/fixtures/")
     .then((response) => {
       console.log(response);
       if (!response.ok) throw Error(response.statusText);
