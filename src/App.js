@@ -12,27 +12,25 @@ class App extends Component {
       gf: null,
       ga: null,
       playersDict: null,
-      isLoading: false,
     }
   }
 
   componentDidMount() {
-    this.setState({isLoading: true})
-    const getPlayersResults = this.getPlayers()
-    const getScheduleResults = this.getSchedule()
-    const fixtures = getScheduleResults["fixtures"]
-    const oppGF = getScheduleResults["oppGF"]
-    const oppGA = getScheduleResults["oppGA"]
-    const gf = getScheduleResults["gf"]
-    const ga = getScheduleResults["ga"]
-    this.setState({
-      playersDict: getPlayersResults,
-      fixtures: fixtures,
-      oppGF: oppGF,
-      oppGA: oppGA,
-      gf: gf,
-      ga: ga
-    })
+    // const getPlayersResults = this.getPlayers()
+    // const getScheduleResults = this.getSchedule()
+    // const fixtures = getScheduleResults["fixtures"]
+    // const oppGF = getScheduleResults["oppGF"]
+    // const oppGA = getScheduleResults["oppGA"]
+    // const gf = getScheduleResults["gf"]
+    // const ga = getScheduleResults["ga"]
+    // this.setState({
+    //   playersDict: getPlayersResults,
+    //   fixtures: fixtures,
+    //   oppGF: oppGF,
+    //   oppGA: oppGA,
+    //   gf: gf,
+    //   ga: ga
+    // })
   }
 
   getPlayers = () => {
