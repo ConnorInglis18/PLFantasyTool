@@ -16,7 +16,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("COMPONENT MOUNTED")
     const getPlayersResults = this.getPlayers()
     const getScheduleResults = this.getSchedule()
     const fixtures = getScheduleResults["fixtures"]
@@ -36,7 +35,6 @@ class App extends Component {
 
   getPlayers = () => {
     let playersDict = {}
-    console.log("GETTING PLAYERS")
     fetch("https://cors-anywhere.herokuapp.com/https://fantasy.premierleague.com/api/bootstrap-static/")
     .then((response) => {
       console.log(response);
@@ -44,7 +42,6 @@ class App extends Component {
           return response.json();
       })
     .then((data) => {
-      console.log("GOT PLAYER DATA")
       const players = data.elements // eslint-disable-next-line
       for(const player of players) {
         playersDict[player["id"]] = player["web_name"]
@@ -267,15 +264,12 @@ class App extends Component {
     const { gf, ga } = this.state
     // Data still loading
     if(!this.state.fixtures || !this.state.ga || !this.state.gf) {
-      console.log("FIRST LOADING: ", this.state.fixtures)
-      return (<div>Loading...</div>)
+      return (<div>Loading... if the program doesn't load, wait 10 seconds and refresh the page</div>)
     } else if(this.state.fixtures["ARS"].length === 0) {
-      console.log("SECOND LOADING: ", this.state.fixtures)
-      return (<div>Loading...</div>)
+      return (<div>Loading... if the program doesn't load, wait 10 seconds and refresh the page</div>)
     }
     // Data is done loading
     else {
-      console.log("DONE LOADING")
       let minGF = 1000
       let maxGF = 0
       let minGA = 1000
