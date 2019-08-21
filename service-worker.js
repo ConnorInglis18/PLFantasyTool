@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/PLFantasyTool/precache-manifest.921ff7918901783f0998898a74f62705.js"
+  "/PLFantasyTool/precache-manifest.187c450c2479566006bd2b0d54edbc0d.js"
 );
 
 self.addEventListener('message', (event) => {
