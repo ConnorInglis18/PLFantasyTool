@@ -368,7 +368,7 @@ class App extends Component {
             </table>
           </div>
           <div>
-            Used for Offense
+            HELLO - Used for Offense
             <table>
               <tbody>
               <tr>
