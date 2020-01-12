@@ -22,7 +22,7 @@ class App extends Component {
     const oppGF = getScheduleResults["oppGF"]
     const oppGA = getScheduleResults["oppGA"]
     const gf = getScheduleResults["gf"]
-    const ga = getScheduleResults["ga"]
+    const ga = getScheduleResults["ga"] 
     this.setState({
       playersDict: getPlayersResults,
       fixtures: fixtures,
@@ -318,6 +318,7 @@ class App extends Component {
       return (
         <div>
           <div>
+            HELLO
             Used for Defense
             <table>
               <tbody>
