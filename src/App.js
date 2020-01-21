@@ -1,35 +1,44 @@
 import React, { Component } from 'react';
 import './App.css';
-import { all } from 'q';
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fixtures: null,
-      oppGF: null,
-      oppGA: null,
-      gf: null,
-      ga: null,
+      gf: [],
+      ga: [],
       playersDict: null,
+      defendersDisplay: [],
+      attackersDisplay: [],
+      gfColors: [],
+      gaColors: [],
     }
   }
 
   componentDidMount() {
+    this.loadData()
+  }
+
+  loadData() {
     const getPlayersResults = this.getPlayers()
     const getScheduleResults = this.getSchedule()
     const fixtures = getScheduleResults["fixtures"]
-    const oppGF = getScheduleResults["oppGF"]
-    const oppGA = getScheduleResults["oppGA"]
     const gf = getScheduleResults["gf"]
-    const ga = getScheduleResults["ga"] 
+    const ga = getScheduleResults["ga"]
+    const defendersDisplay = getScheduleResults["defendersDisplay"]
+    const attackersDisplay = getScheduleResults["attackersDisplay"]
+    const gfColors = getScheduleResults["gfColors"]
+    const gaColors = getScheduleResults["gaColors"]
     this.setState({
       playersDict: getPlayersResults,
       fixtures: fixtures,
-      oppGF: oppGF,
-      oppGA: oppGA,
       gf: gf,
-      ga: ga
+      ga: ga,
+      defendersDisplay: defendersDisplay,
+      attackersDisplay: attackersDisplay,
+      gfColors: gfColors,
+      gaColors: gaColors,
     })
   }
 
@@ -37,7 +46,6 @@ class App extends Component {
     let playersDict = {}
     fetch("https://cors-anywhere.herokuapp.com/https://fantasy.premierleague.com/api/bootstrap-static/")
     .then((response) => {
-      console.log(response);
       if (!response.ok) throw Error(response.statusText);
           return response.json();
       })
@@ -52,90 +60,64 @@ class App extends Component {
     return playersDict
   }
 
+  // takes in a game and the previous info, which contains
+  // fixtures, gf, ga
+  // fixtures - dictionary of team keys, value is array of size 38 (for each match)
+  // gf, ga - dictionary of team keys, value is that teams gf and ga
   addGameInfo = (game, info) => {
     const homeTeam = teamCodesInverted[game["team_h"]]
     const awayTeam = teamCodesInverted[game["team_a"]]
     const isFinished = game["finished"]
-    const homeTeamScore = game["team_h_score"]
-    const awayTeamScore = game["team_a_score"]
+    // gameweeks are 1-indexed so -1 is used to index into arrray's
+    const gameweek = parseInt(game["event"])-1
 
-
-    info["fixtures"][homeTeam].push({"opp": awayTeam, "isFinished": isFinished, "gf": homeTeamScore, "ga": awayTeamScore})
-    info["fixtures"][awayTeam].push({"opp": homeTeam, "isFinished": isFinished, "gf": awayTeamScore, "ga": homeTeamScore})
-    info["gf"][homeTeam] = info["gf"][homeTeam] + homeTeamScore
-    info["ga"][homeTeam] = info["ga"][homeTeam] + awayTeamScore
-    info["gf"][awayTeam] = info["gf"][awayTeam] + awayTeamScore
-    info["ga"][awayTeam] = info["ga"][awayTeam] + homeTeamScore
+    if (info["fixtures"][homeTeam][gameweek] === null) {
+      info["fixtures"][homeTeam][gameweek] = [{"opp": awayTeam, "isFinished": isFinished}]
+    } else { // accounts for double gameweeks
+      info["fixtures"][homeTeam][gameweek] = [info["fixtures"][homeTeam][gameweek][0], {"opp": awayTeam, "isFinished": isFinished}]
+    }
+    
+    if (info["fixtures"][awayTeam][gameweek] === null) {
+      info["fixtures"][awayTeam][gameweek] = [{"opp": homeTeam, "isFinished": isFinished}]
+    } else { // accounts for double gameweeks
+      info["fixtures"][awayTeam][gameweek] = [info["fixtures"][awayTeam][gameweek][0], {"opp": homeTeam, "isFinished": isFinished}]
+    }
+    
+    // if the current game has been played, add the scores to the two team's
+    if(isFinished) {
+      const homeTeamScore = game["team_h_score"]
+      const awayTeamScore = game["team_a_score"]
+      info["gf"][homeTeam] += homeTeamScore
+      info["ga"][homeTeam] += awayTeamScore
+      info["gf"][awayTeam] += awayTeamScore
+      info["ga"][awayTeam] += homeTeamScore
+    }
     return info
   }
 
   getSchedule = () => {
     let info = {
       fixtures: {
-        "ARS": [],
-        "AVL": [],
-        "BOU": [],
-        "BHA": [],
-        "BUR": [],
-        "CHE": [],
-        "CRY": [],
-        "EVE": [],
-        "LEI": [],
-        "LIV": [],
-        "MCY": [],
-        "MUN": [],
-        "NEW": [],
-        "NOR": [],
-        "SHE": [],
-        "SOU": [],
-        "TOT": [],
-        "WAT": [],
-        "WHU": [],
-        "WOL": [],
-      },
-      oppGF: {
-        "ARS": [],
-        "AVL": [],
-        "BOU": [],
-        "BHA": [],
-        "BUR": [],
-        "CHE": [],
-        "CRY": [],
-        "EVE": [],
-        "LEI": [],
-        "LIV": [],
-        "MCY": [],
-        "MUN": [],
-        "NEW": [],
-        "NOR": [],
-        "SHE": [],
-        "SOU": [],
-        "TOT": [],
-        "WAT": [],
-        "WHU": [],
-        "WOL": [],
-      },
-      oppGA: {
-        "ARS": [],
-        "AVL": [],
-        "BOU": [],
-        "BHA": [],
-        "BUR": [],
-        "CHE": [],
-        "CRY": [],
-        "EVE": [],
-        "LEI": [],
-        "LIV": [],
-        "MCY": [],
-        "MUN": [],
-        "NEW": [],
-        "NOR": [],
-        "SHE": [],
-        "SOU": [],
-        "TOT": [],
-        "WAT": [],
-        "WHU": [],
-        "WOL": [],
+        "ARS": new Array(38).fill(null),
+        "AVL": new Array(38).fill(null),
+        "BOU": new Array(38).fill(null),
+        "BHA": new Array(38).fill(null),
+        "BUR": new Array(38).fill(null),
+        "CHE": new Array(38).fill(null),
+        "CRY": new Array(38).fill(null),
+        "EVE": new Array(38).fill(null),
+        "LEI": new Array(38).fill(null),
+        "LIV": new Array(38).fill(null),
+        "MCY": new Array(38).fill(null),
+        "MUN": new Array(38).fill(null),
+        "NEW": new Array(38).fill(null),
+        "NOR": new Array(38).fill(null),
+        "SHE": new Array(38).fill(null),
+        "SOU": new Array(38).fill(null),
+        "TOT": new Array(38).fill(null),
+        "WAT": new Array(38).fill(null),
+        "WHU": new Array(38).fill(null),
+        "WOL": new Array(38).fill(null),
       },
       gf: {
         "ARS": 0,
@@ -180,11 +162,14 @@ class App extends Component {
         "WAT": 0,
         "WHU": 0,
         "WOL": 0
-      }
+      },
+      defendersDisplay: {},
+      attackersDisplay: {},
+      gfColors: [],
+      gaColors: [],
     }
     fetch("https://cors-anywhere.herokuapp.com/https://fantasy.premierleague.com/api/fixtures/")
     .then((response) => {
-      console.log(response);
       if (!response.ok) throw Error(response.statusText);
           return response.json();
       })
@@ -192,233 +177,207 @@ class App extends Component {
       for(const game of data) {
         info = this.addGameInfo(game, info);
       }
+      this.createAttackersDisplay(info)
+      this.createDefendersDisplay(info)
+      this.createColorBrackets(info)
       this.setState({
-        dataLoaded: true
+        gfColors: info["gfColors"],
+        gaColors: info["gaColors"],
       })
-      for(const curTeam of Object.keys(info["fixtures"])) { // eslint-disable-line
-        for(let opposingTeam of info["fixtures"][curTeam]) { // eslint-disable-line
-          info["oppGF"][curTeam].push(info["gf"][opposingTeam])
-          info["oppGA"][curTeam].push(info["ga"][opposingTeam])
-        }
-      }
     })
     .catch(error => console.log(error)); // eslint-disable-line no-console
     return info;
   }
 
-  getGFColor = (oppTeamGF, isFinished, minGF, maxGF) => {
-    switch(true) {
-      case(isFinished):
-        return styles.grey
-      case(minGF <= oppTeamGF && oppTeamGF < (maxGF * 0.11)):
-        return styles.darkgreen
-      case((minGF * 0.11) <= oppTeamGF && oppTeamGF < (maxGF * 0.22)):
-        return styles.green
-      case((minGF * 0.22) <= oppTeamGF && oppTeamGF < (maxGF * 0.33)):
-        return styles.lightgreen
-      case((minGF * 0.33) <= oppTeamGF && oppTeamGF < (maxGF * 0.44)):
-        return styles.whitegreen
-      case((minGF * 0.44) <= oppTeamGF && oppTeamGF < (maxGF * 0.55)):
-        return styles.white
-      case((minGF * 0.55) <= oppTeamGF && oppTeamGF < (maxGF * 0.66)):
-        return styles.whitered
-      case((minGF * 0.66) <= oppTeamGF && oppTeamGF < (maxGF * 0.77)):
-        return styles.lightred
-      case((minGF * 0.77) <= oppTeamGF && oppTeamGF < (maxGF * 0.88)):
-        return styles.red
-      case((minGF * 0.88) <= oppTeamGF && oppTeamGF <= maxGF):
-        return styles.darkred
-      default:
-        console.log("ERROR")
+  canMakeSubsets = (arr, k, inc) => {
+    let subsets = 0
+    let largestVal = arr[0] + inc
+    for (let i = 0; i < arr.length; ++i) {
+      if (arr[i] > largestVal) {
+        subsets += 1
+        largestVal = arr[i] + inc
+      }
     }
+    return subsets < k
   }
 
-  getGAColor = (oppTeamGA, isFinished, minGA, maxGA) => {
-    switch(true) {
-      case(isFinished):
-        return styles.grey
-      case(minGA <= oppTeamGA && oppTeamGA < (maxGA * 0.11)):
-        return styles.darkred
-      case((minGA * 0.11) <= oppTeamGA && oppTeamGA < (maxGA * 0.22)):
-        return styles.red
-      case((minGA * 0.22) <= oppTeamGA && oppTeamGA < (maxGA * 0.33)):
-        return styles.lightred
-      case((minGA * 0.33) <= oppTeamGA && oppTeamGA < (maxGA * 0.44)):
-        return styles.whitered
-      case((minGA * 0.44) <= oppTeamGA && oppTeamGA < (maxGA * 0.55)):
-        return styles.white
-      case((minGA * 0.55) <= oppTeamGA && oppTeamGA < (maxGA * 0.66)):
-        return styles.whitegreen
-      case((minGA * 0.66) <= oppTeamGA && oppTeamGA < (maxGA * 0.77)):
-        return styles.lightgreen
-      case((minGA * 0.77) <= oppTeamGA && oppTeamGA < (maxGA * 0.88)):
-        return styles.green
-      case((minGA * 0.88) <= oppTeamGA && oppTeamGA <= maxGA):
-        return styles.darkgreen
-      default:
-        console.log("ERROR")
+  makeSubsets = (arr, inc) => {
+    let subsets = []
+    let subset = []
+    subset.push(arr[0])
+    subset.push(arr[0]+inc)
+    subsets.push(subset)
+    let largestVal = arr[0] + inc
+    for (let i = 0; i < arr.length; ++i) {
+      if (arr[i] > largestVal) {
+        subset = []
+        subset.push(arr[i])
+        subset.push(arr[i]+inc)
+        subsets.push(subset)
+        largestVal = arr[i] + inc
+      }
     }
+    return subsets
+  }
+
+  createColorBrackets = (info) => {
+    const numColors = 5
+    // gf colors
+    const gf = Object.values(info["gf"]).sort()
+    // get max and min of gf array
+    const maxGF = Math.max.apply(null, gf)
+    const minGF = Math.min.apply(null, gf)
+    let gfRange = Math.ceil((maxGF - minGF) / numColors) + 1
+    while (this.canMakeSubsets(gf, numColors, gfRange-1)) {
+      gfRange -= 1
+    }
+    info["gfColors"] = this.makeSubsets(gf, gfRange)
+    // reverse the ordering to make the colors easier to handle
+    let tmp = info["gfColors"][0]
+    info["gfColors"][0] = info["gfColors"][4];
+    info["gfColors"][4] = tmp;
+    tmp = info["gfColors"][1]
+    info["gfColors"][1] = info["gfColors"][3];
+    info["gfColors"][3] = tmp;
+    // // ga colors
+    const ga = Object.values(info["ga"]).sort()
+    const maxGA = Math.max.apply(null, ga)
+    const minGA = Math.min.apply(null, ga)
+    let gaRange = Math.ceil((maxGA - minGA) / numColors) + 1
+    while (this.canMakeSubsets(ga, numColors, gaRange-1)) {
+      gaRange -= 1
+    }
+    info["gaColors"] = this.makeSubsets(ga, gaRange)
+  }
+
+  createDefendersDisplay = (info) => {
+    const fixtures = info["fixtures"]
+    const defendersDisplay = info["defendersDisplay"]
+    const gf = info["gf"]
+    Object.keys(fixtures).forEach(team => {
+      defendersDisplay[team] = new Array(38)
+      for (let week = 0; week < 38; ++week) {
+        if (fixtures[team][week] === null) {
+          defendersDisplay[team][week] = -1
+        }
+        else if (fixtures[team][week].length > 1) {
+          let game1 = fixtures[team][week][0]["isFinished"] ? -1 : gf[fixtures[team][week][0]["opp"]]
+          let game2 = fixtures[team][week][1]["isFinished"] ? -1 : gf[fixtures[team][week][1]["opp"]]
+          defendersDisplay[team][week] = game1 + " " + game2
+        }
+        else {
+          defendersDisplay[team][week] = fixtures[team][week][0]["isFinished"] ? -1 : gf[fixtures[team][week][0]["opp"]]
+        }
+      }
+    })
+  }
+
+  createAttackersDisplay = (info) => {
+    const fixtures = info["fixtures"]
+    const attackersDisplay = info["attackersDisplay"]
+    const ga = info["ga"]
+    Object.keys(fixtures).forEach(team => {
+      attackersDisplay[team] = new Array(38)
+      for (let week = 0; week < 38; ++week) {
+        if (fixtures[team][week] === null) {
+          attackersDisplay[team][week] = -1
+        }
+        else if (fixtures[team][week].length > 1) {
+          let game1 = fixtures[team][week][0]["isFinished"] ? -1 : ga[fixtures[team][week][0]["opp"]]
+          let game2 = fixtures[team][week][1]["isFinished"] ? -1 : ga[fixtures[team][week][1]["opp"]]
+          attackersDisplay[team][week] = game1 + " " + game2
+        }
+        else {
+          attackersDisplay[team][week] = fixtures[team][week][0]["isFinished"] ? -1 : ga[fixtures[team][week][0]["opp"]]
+        }
+      }
+    })
+  }
+  
+  getColor = (goals, colors) => {
+    switch(true) {
+      case(colors[0][0] <= goals && goals <= colors[0][1]):
+        return styles.darkred
+      case(colors[1][0] <= goals && goals <= colors[1][1]):
+        return styles.red
+      case(colors[2][0] <= goals && goals <= colors[2][1]):
+        return styles.grey
+      case(colors[3][0] <= goals && goals <= colors[3][1]):
+        return styles.green
+      case(colors[4][0] <= goals && goals <= colors[4][1]):
+        return styles.darkgreen
+      default: // used if the number is -1
+        return styles.darkgrey
+    }
+  }
+ 
+  createTable = (colors, display) => {
+    return Object.keys(display).map(team => {
+      return (
+        <tr key={team} style={styles.tableRow}>
+          <th>{team}</th>
+          {display[team].map((goals,index) => {
+            return (typeof goals === "number") ?
+              (<td key={index} style={Object.assign({}, this.getColor(goals, colors),styles.tableData)}>
+                {goals}
+              </td>) :
+              (<td key={index} style={Object.assign({}, styles.tableData, styles.doubleGame)}>
+                <div style={this.getColor(parseInt(goals.substring(0,2)), colors)}>
+                  {goals.substring(0,2)}
+                </div>
+                <div style={this.getColor(parseInt(goals.substring(3,5)), colors)}>
+                  {goals.substring(3,5)}
+                </div>
+              </td>);
+          })}
+        </tr>
+      )
+    })
+  }
+
+  createHeaders = () => {
+    let headers = []
+    headers.push("TEAM")
+    for (let i = 1; i < 39; ++i) {
+      i < 10 ? headers.push("0" + i) : headers.push(i)
+    }
+    let mappedHeaders = headers.map(header => {
+      return <th key={header} style={styles.column}>{header}</th>
+    })
+    return (<tr>{mappedHeaders}</tr>)
+  }
+
+  renderScreen = () => {
+    return (
+      <div>
+        <div>
+          Used for Defense
+          <table>
+            <tbody>
+              {this.createHeaders()}
+              {this.createTable(this.state.gfColors, this.state.defendersDisplay)}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          Used for Offense
+          <table>
+            <tbody>
+              {this.createHeaders()}
+              {this.createTable(this.state.gaColors, this.state.attackersDisplay)}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )
   }
 
   render () {
-    const { gf, ga } = this.state
-    // Data still loading
-    if(!this.state.fixtures || !this.state.ga || !this.state.gf) {
-      return (<div>Loading... if the program doesn't load, wait 10 seconds and refresh the page</div>)
-    } else if(this.state.fixtures["ARS"].length === 0) {
-      return (<div>Loading... if the program doesn't load, wait 10 seconds and refresh the page</div>)
-    }
-    // Data is done loading
-    else {
-      let minGF = 1000
-      let maxGF = 0
-      let minGA = 1000
-      let maxGA = 0
-
-      for(const GF of Object.keys(gf)) {
-        if(gf[GF] < minGF) { minGF = gf[GF] }
-        if(gf[GF] > maxGF) { maxGF = gf[GF] }
-      }
-
-      for(const GA of Object.keys(ga)) {
-        if(ga[GA] < minGA) { minGA = ga[GA] }
-        if(ga[GA] > maxGA) { maxGA = ga[GA] }
-      }
-
-      let oppGA = Object.keys(this.state.fixtures).map(team => {
-        return (
-          <tr key={team}>
-            <th>{team}</th>
-            {this.state.fixtures[team].map((gameInfo,index) => {
-              return(
-                <td key={index} style={this.getGAColor(ga[gameInfo["opp"]], gameInfo["isFinished"], minGA, maxGA)}>
-                  {ga[gameInfo["opp"]]}
-                </td>
-              )
-            })}
-          </tr>
-        )
-      })
-
-      let oppGF = Object.keys(this.state.fixtures).map(team => {
-        return (
-          <tr key={team}>
-            <th>{team}</th>
-            {this.state.fixtures[team].map((gameInfo,index) => {
-              return(
-                <td key={index} style={this.getGFColor(gf[gameInfo["opp"]], gameInfo["isFinished"], minGF, maxGF)}>
-                  {gf[gameInfo["opp"]]}
-                </td>
-              )
-            })}
-          </tr>
-        )
-      })
-
-      return (
-        <div>
-          <div>
-            HELLO
-            Used for Defense
-            <table>
-              <tbody>
-                <tr>
-                  <th style={styles.column}>TEAM</th>
-                  <th style={styles.column}>01</th>
-                  <th style={styles.column}>02</th>
-                  <th style={styles.column}>03</th>
-                  <th style={styles.column}>04</th>
-                  <th style={styles.column}>05</th>
-                  <th style={styles.column}>06</th>
-                  <th style={styles.column}>07</th>
-                  <th style={styles.column}>08</th>
-                  <th style={styles.column}>09</th>
-                  <th style={styles.column}>10</th>
-                  <th style={styles.column}>11</th>
-                  <th style={styles.column}>12</th>
-                  <th style={styles.column}>13</th>
-                  <th style={styles.column}>14</th>
-                  <th style={styles.column}>15</th>
-                  <th style={styles.column}>16</th>
-                  <th style={styles.column}>17</th>
-                  <th style={styles.column}>18</th>
-                  <th style={styles.column}>19</th>
-                  <th style={styles.column}>20</th>
-                  <th style={styles.column}>21</th>
-                  <th style={styles.column}>22</th>
-                  <th style={styles.column}>23</th>
-                  <th style={styles.column}>24</th>
-                  <th style={styles.column}>25</th>
-                  <th style={styles.column}>26</th>
-                  <th style={styles.column}>27</th>
-                  <th style={styles.column}>28</th>
-                  <th style={styles.column}>29</th>
-                  <th style={styles.column}>30</th>
-                  <th style={styles.column}>31</th>
-                  <th style={styles.column}>32</th>
-                  <th style={styles.column}>33</th>
-                  <th style={styles.column}>34</th>
-                  <th style={styles.column}>35</th>
-                  <th style={styles.column}>36</th>
-                  <th style={styles.column}>37</th>
-                  <th style={styles.column}>38</th>
-                </tr>
-                {oppGF}
-              </tbody>
-            </table>
-          </div>
-          <div>
-            HELLO - Used for Offense
-            <table>
-              <tbody>
-              <tr>
-                  <th style={styles.column}>TEAM</th>
-                  <th style={styles.column}>01</th>
-                  <th style={styles.column}>02</th>
-                  <th style={styles.column}>03</th>
-                  <th style={styles.column}>04</th>
-                  <th style={styles.column}>05</th>
-                  <th style={styles.column}>06</th>
-                  <th style={styles.column}>07</th>
-                  <th style={styles.column}>08</th>
-                  <th style={styles.column}>09</th>
-                  <th style={styles.column}>10</th>
-                  <th style={styles.column}>11</th>
-                  <th style={styles.column}>12</th>
-                  <th style={styles.column}>13</th>
-                  <th style={styles.column}>14</th>
-                  <th style={styles.column}>15</th>
-                  <th style={styles.column}>16</th>
-                  <th style={styles.column}>17</th>
-                  <th style={styles.column}>18</th>
-                  <th style={styles.column}>19</th>
-                  <th style={styles.column}>20</th>
-                  <th style={styles.column}>21</th>
-                  <th style={styles.column}>22</th>
-                  <th style={styles.column}>23</th>
-                  <th style={styles.column}>24</th>
-                  <th style={styles.column}>25</th>
-                  <th style={styles.column}>26</th>
-                  <th style={styles.column}>27</th>
-                  <th style={styles.column}>28</th>
-                  <th style={styles.column}>29</th>
-                  <th style={styles.column}>30</th>
-                  <th style={styles.column}>31</th>
-                  <th style={styles.column}>32</th>
-                  <th style={styles.column}>33</th>
-                  <th style={styles.column}>34</th>
-                  <th style={styles.column}>35</th>
-                  <th style={styles.column}>36</th>
-                  <th style={styles.column}>37</th>
-                  <th style={styles.column}>38</th>
-                </tr>
-                {oppGA}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      );
-    }
+    return (this.state.gfColors.length === 0 && this.state.attackersDisplay.length === 0 && this.state.defendersDisplay.length === 0)
+    ?
+    (<div>Loading Page...</div>)
+    :
+    this.renderScreen()
   }
 }
 
@@ -426,63 +385,44 @@ export default App;
 
 const styles = {
   column: {
-    width: "2px",
     justifyContent: "center"
   },
-  grey: {
-    background: "grey",
-    color: "grey"
+  tableData: {
+    height: "34px",
+    width: "30px",
+    textAlign: "center",
+    border: "1px solid black",
+    fontSize: ".9em",
+  },
+  doubleGame: {
+    background: "yellow",
+    border: "1px solid red",
+  },
+  darkgrey: {
+    background: "darkgrey",
+    color: "darkgrey"
   },
   darkred: {
-    background: "#F8696B",
+    background: "#861D46",
+    color: "white",
   },
   red: {
-    background: "#FAA5A6",
+    background: "#FF005A",
+    color: "white",
   },
-  lightred: {
-    background: "#FCD2D2",
-  },
-  whitered: {
-    background: "#FEF0F0",
-  },
-  white: {
-    background: "#FFFFFF",
-  },
-  whitegreen: {
-    background: "#EFF8F1",
-  },
-  lightgreen: {
-    background: "#CFEBD6",
+  grey: {
+    background: "#EBEBE4",
   },
   green: {
-    background: "#A0D7AF",
+    background: "#00ff86",
   },
   darkgreen: {
-    background: "#63BE7B",
+    background: "#02894E",
+    color: "white",
   },
-}
-
-let teamCodes = {
-  "ARS": 1,
-  "AVL": 2,
-  "BOU": 3,
-  "BHA": 4,
-  "BUR": 5,
-  "CHE": 6,
-  "CRY": 7,
-  "EVE": 8,
-  "LEI": 9,
-  "LIV": 10,
-  "MCY": 11,
-  "MUN": 12,
-  "NEW": 13,
-  "NOR": 14,
-  "SHE": 15,
-  "SOU": 16,
-  "TOT": 17,
-  "WAT": 18,
-  "WHU": 19,
-  "WOL": 20,
+  yellow: {
+    background: "yellow",
+  },
 }
 
 let teamCodesInverted = {
