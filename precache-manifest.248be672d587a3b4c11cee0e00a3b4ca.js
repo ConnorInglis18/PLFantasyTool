@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1d5e5bdcc55d59c203d73fbc030c6997",
+    "revision": "1fc96867e94e4eb068495726e27743ec",
     "url": "/PLFantasyTool/index.html"
   },
   {
-    "revision": "79fefa0ca64da6b43ec5",
+    "revision": "106208b47dac5622b1b2",
     "url": "/PLFantasyTool/static/css/main.2cce8147.chunk.css"
   },
   {
-    "revision": "c73aca377cc9928ed823",
-    "url": "/PLFantasyTool/static/js/2.8b9d1701.chunk.js"
+    "revision": "357ca921d18eca551e5e",
+    "url": "/PLFantasyTool/static/js/2.0c3292e0.chunk.js"
   },
   {
-    "revision": "79fefa0ca64da6b43ec5",
-    "url": "/PLFantasyTool/static/js/main.ba39d17c.chunk.js"
+    "revision": "106208b47dac5622b1b2",
+    "url": "/PLFantasyTool/static/js/main.983bc5df.chunk.js"
   },
   {
     "revision": "6b7f079b59a93e88bbf2",
