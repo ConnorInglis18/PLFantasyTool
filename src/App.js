@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import Table from './Table.js';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 class App extends Component {
@@ -13,6 +17,7 @@ class App extends Component {
       attackersDisplay: [],
       gfColors: [],
       gaColors: [],
+      view: "Home",
     }
   }
 
@@ -293,137 +298,56 @@ class App extends Component {
       }
     })
   }
-  
-  getColor = (goals, colors) => {
-    switch(true) {
-      case(colors[0][0] <= goals && goals <= colors[0][1]):
-        return styles.darkred
-      case(colors[1][0] <= goals && goals <= colors[1][1]):
-        return styles.red
-      case(colors[2][0] <= goals && goals <= colors[2][1]):
-        return styles.grey
-      case(colors[3][0] <= goals && goals <= colors[3][1]):
-        return styles.green
-      case(colors[4][0] <= goals && goals <= colors[4][1]):
-        return styles.darkgreen
-      default: // used if the number is -1
-        return styles.darkgrey
-    }
-  }
- 
-  createTable = (colors, display) => {
-    return Object.keys(display).map(team => {
-      return (
-        <tr key={team} style={styles.tableRow}>
-          <th>{team}</th>
-          {display[team].map((goals,index) => {
-            return (typeof goals === "number") ?
-              (<td key={index} style={Object.assign({}, this.getColor(goals, colors),styles.tableData)}>
-                {goals}
-              </td>) :
-              (<td key={index} style={Object.assign({}, styles.tableData, styles.doubleGame)}>
-                <div style={this.getColor(parseInt(goals.substring(0,2)), colors)}>
-                  {goals.substring(0,2)}
-                </div>
-                <div style={this.getColor(parseInt(goals.substring(3,5)), colors)}>
-                  {goals.substring(3,5)}
-                </div>
-              </td>);
-          })}
-        </tr>
-      )
+
+  showDefenders = (e) => {
+    this.setState({
+      view: "Defenders",
     })
   }
 
-  createHeaders = () => {
-    let headers = []
-    headers.push("TEAM")
-    for (let i = 1; i < 39; ++i) {
-      i < 10 ? headers.push("0" + i) : headers.push(i)
-    }
-    let mappedHeaders = headers.map(header => {
-      return <th key={header} style={styles.column}>{header}</th>
+  showAttackers = (e) => {
+    this.setState({
+      view: "Attackers",
     })
-    return (<tr>{mappedHeaders}</tr>)
+  }
+  
+  showHome = (e) => {
+    this.setState({
+      view: "Home",
+    })
+  }
+
+  showDisplay = () => {
+    return this.state.view === "Defenders" ?
+      (<Table colors={this.state.gfColors} display={this.state.defendersDisplay} />) :
+      this.state.view === "Attackers" ?
+        (<Table colors={this.state.gaColors} display={this.state.attackersDisplay} />) :
+        this.state.view === "Home" ?
+        (<div style={{marginTop: "50px"}}>Welcome to the Premier League Fantasy Tool Website by Connor Inglis </div>) :
+        (<div>Loading...</div>)
   }
 
   renderScreen = () => {
     return (
       <div>
-        <div>
-          Used for Defense
-          <table>
-            <tbody>
-              {this.createHeaders()}
-              {this.createTable(this.state.gfColors, this.state.defendersDisplay)}
-            </tbody>
-          </table>
-        </div>
-        <div>
-          Used for Offense
-          <table>
-            <tbody>
-              {this.createHeaders()}
-              {this.createTable(this.state.gaColors, this.state.attackersDisplay)}
-            </tbody>
-          </table>
-        </div>
+        <Navbar className="fixed-top" expand="lg" bg="light" variant="light">
+          <Navbar.Brand onClick={this.showHome}>Premier League Fantasy Tool</Navbar.Brand>
+          <Nav className="mr-auto">
+            <Nav.Link onClick={this.showDefenders}>Defenders</Nav.Link>
+            <Nav.Link onClick={this.showAttackers}>Attackers</Nav.Link>
+          </Nav>
+        </Navbar>
+        {this.showDisplay()}
       </div>
     )
   }
 
   render () {
-    return (this.state.gfColors.length === 0 && this.state.attackersDisplay.length === 0 && this.state.defendersDisplay.length === 0)
-    ?
-    (<div>Loading Page...</div>)
-    :
-    this.renderScreen()
+    return this.renderScreen()
   }
 }
 
 export default App;
-
-const styles = {
-  column: {
-    justifyContent: "center"
-  },
-  tableData: {
-    height: "34px",
-    width: "30px",
-    textAlign: "center",
-    border: "1px solid black",
-    fontSize: ".9em",
-  },
-  doubleGame: {
-    background: "yellow",
-    border: "1px solid red",
-  },
-  darkgrey: {
-    background: "darkgrey",
-    color: "darkgrey"
-  },
-  darkred: {
-    background: "#861D46",
-    color: "white",
-  },
-  red: {
-    background: "#FF005A",
-    color: "white",
-  },
-  grey: {
-    background: "#EBEBE4",
-  },
-  green: {
-    background: "#00ff86",
-  },
-  darkgreen: {
-    background: "#02894E",
-    color: "white",
-  },
-  yellow: {
-    background: "yellow",
-  },
-}
 
 let teamCodesInverted = {
   1: "ARS",
