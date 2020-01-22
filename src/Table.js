@@ -42,11 +42,11 @@ class Table extends Component {
               (<td key={index} style={Object.assign({}, this.getColor(goals, colors),styles.tableData)}>
                 {goals}
               </td>) :
-              (<td key={index} style={Object.assign({}, styles.tableData, styles.doubleGame)}>
-                <div style={this.getColor(parseInt(goals.substring(0,2)), colors)}>
+              (<td key={index} style={styles.doubleGame}>
+                <div style={Object.assign({}, this.getColor(parseInt(goals.substring(0,2)), colors), styles.doubleGameData)}>
                   {goals.substring(0,2)}
                 </div>
-                <div style={this.getColor(parseInt(goals.substring(3,5)), colors)}>
+                <div style={Object.assign({}, this.getColor(parseInt(goals.substring(3,5)), colors), styles.doubleGameData)}>
                   {goals.substring(3,5)}
                 </div>
               </td>);
@@ -86,24 +86,28 @@ export default Table;
 
 const styles = {
   background: {
-    background: "lightgrey",
-    display: "flex",
-    height: "100vh",
-    paddingLeft: "50px",
-    paddingTop: "75px",
+    padding: "2vh 2vw",
   },
   column: {
-    justifyContent: "center"
+    textAlign: "center",
   },
   tableData: {
-    height: "40px",
-    width: "40px",
+    height: "4vh",
+    width: "2.2vw",
     textAlign: "center",
     border: "1px solid black",
-    fontSize: ".9em",
+    fontSize: "1vw",
   },
   doubleGame: {
-    background: "yellow",
+    border: "1px solid black",
+    width: "2.2vw",
+  },
+  doubleGameData: {
+    height: "2vh",
+    fontSize: ".75vw",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   darkgrey: {
     background: "darkgrey",

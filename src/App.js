@@ -323,14 +323,14 @@ class App extends Component {
       this.state.view === "Attackers" ?
         (<Table colors={this.state.gaColors} display={this.state.attackersDisplay} />) :
         this.state.view === "Home" ?
-        (<div style={{marginTop: "50px"}}>Welcome to the Premier League Fantasy Tool Website by Connor Inglis </div>) :
+        (<div>Welcome to the Premier League Fantasy Tool Website by Connor Inglis </div>) :
         (<div>Loading...</div>)
   }
 
   renderScreen = () => {
     return (
       <div>
-        <Navbar className="fixed-top" expand="lg" bg="light" variant="light">
+        <Navbar sticky="top" expand="lg" bg="light" variant="light">
           <Navbar.Brand onClick={this.showHome}>Premier League Fantasy Tool</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link onClick={this.showDefenders}>Defenders</Nav.Link>
