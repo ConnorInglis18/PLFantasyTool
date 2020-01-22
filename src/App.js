@@ -18,11 +18,16 @@ class App extends Component {
       gfColors: [],
       gaColors: [],
       view: "Home",
+      isMobile: false,
     }
   }
 
   componentDidMount() {
     this.loadData()
+    let isMobile = (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    this.setState({
+      isMobile: isMobile,
+    })
   }
 
   loadData() {
@@ -342,8 +347,14 @@ class App extends Component {
     )
   }
 
+  renderMobileScreen = () => {
+    return (<div>ON MOBILE</div>)
+  }
+
   render () {
-    return this.renderScreen()
+    return this.state.isMobile ?
+      this.renderMobileScreen() :
+      this.renderScreen()
   }
 }
 

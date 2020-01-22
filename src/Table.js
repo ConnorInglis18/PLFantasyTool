@@ -87,6 +87,10 @@ export default Table;
 const styles = {
   background: {
     padding: "2vh 2vw",
+    display: "flex",
+    flexFlow: "column no-wrap",
+    alignItems: "stretch",
+    background: "lightgrey",
   },
   column: {
     textAlign: "center",
