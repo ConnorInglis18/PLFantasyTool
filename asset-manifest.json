@@ -1,25 +1,17 @@
 {
   "files": {
     "main.css": "/PLFantasyTool/static/css/main.2cce8147.chunk.css",
-    "main.js": "/PLFantasyTool/static/js/main.4d9107af.chunk.js",
-    "main.js.map": "/PLFantasyTool/static/js/main.4d9107af.chunk.js.map",
-    "runtime-main.js": "/PLFantasyTool/static/js/runtime-main.7418f6e5.js",
-    "runtime-main.js.map": "/PLFantasyTool/static/js/runtime-main.7418f6e5.js.map",
+    "main.js": "/PLFantasyTool/static/js/main.d2cb52ed.chunk.js",
+    "main.js.map": "/PLFantasyTool/static/js/main.d2cb52ed.chunk.js.map",
+    "runtime~main.js": "/PLFantasyTool/static/js/runtime~main.0501fdc2.js",
+    "runtime~main.js.map": "/PLFantasyTool/static/js/runtime~main.0501fdc2.js.map",
     "static/css/2.47e06e2e.chunk.css": "/PLFantasyTool/static/css/2.47e06e2e.chunk.css",
-    "static/js/2.8244c964.chunk.js": "/PLFantasyTool/static/js/2.8244c964.chunk.js",
-    "static/js/2.8244c964.chunk.js.map": "/PLFantasyTool/static/js/2.8244c964.chunk.js.map",
+    "static/js/2.6405cb7f.chunk.js": "/PLFantasyTool/static/js/2.6405cb7f.chunk.js",
+    "static/js/2.6405cb7f.chunk.js.map": "/PLFantasyTool/static/js/2.6405cb7f.chunk.js.map",
     "index.html": "/PLFantasyTool/index.html",
-    "precache-manifest.237eaf8f8cc01941a42a958ac9af3f56.js": "/PLFantasyTool/precache-manifest.237eaf8f8cc01941a42a958ac9af3f56.js",
+    "precache-manifest.22eaf03ab5c9eadb20bd17bc53348460.js": "/PLFantasyTool/precache-manifest.22eaf03ab5c9eadb20bd17bc53348460.js",
     "service-worker.js": "/PLFantasyTool/service-worker.js",
     "static/css/2.47e06e2e.chunk.css.map": "/PLFantasyTool/static/css/2.47e06e2e.chunk.css.map",
-    "static/css/main.2cce8147.chunk.css.map": "/PLFantasyTool/static/css/main.2cce8147.chunk.css.map",
-    "static/js/2.8244c964.chunk.js.LICENSE": "/PLFantasyTool/static/js/2.8244c964.chunk.js.LICENSE"
-  },
-  "entrypoints": [
-    "static/js/runtime-main.7418f6e5.js",
-    "static/css/2.47e06e2e.chunk.css",
-    "static/js/2.8244c964.chunk.js",
-    "static/css/main.2cce8147.chunk.css",
-    "static/js/main.4d9107af.chunk.js"
-  ]
+    "static/css/main.2cce8147.chunk.css.map": "/PLFantasyTool/static/css/main.2cce8147.chunk.css.map"
+  }
 }
