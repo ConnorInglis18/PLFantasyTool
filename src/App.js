@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Table from './Table.js';
+import Home from './Home.js';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,10 +25,7 @@ class App extends Component {
 
   componentDidMount() {
     this.loadData()
-    let isMobile = (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-    this.setState({
-      isMobile: isMobile,
-    })
+    this.isMobile()
   }
 
   loadData() {
@@ -49,6 +47,13 @@ class App extends Component {
       attackersDisplay: attackersDisplay,
       gfColors: gfColors,
       gaColors: gaColors,
+    })
+  }
+
+  isMobile = () => {
+    let isMobile = (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+    this.setState({
+      isMobile: isMobile,
     })
   }
 
@@ -75,32 +80,32 @@ class App extends Component {
   // fixtures - dictionary of team keys, value is array of size 38 (for each match)
   // gf, ga - dictionary of team keys, value is that teams gf and ga
   addGameInfo = (game, info) => {
-    const homeTeam = teamCodesInverted[game["team_h"]]
-    const awayTeam = teamCodesInverted[game["team_a"]]
+    const homeTeam = teamCodes[game["team_h"]]
+    const awayTeam = teamCodes[game["team_a"]]
     const isFinished = game["finished"]
-    // gameweeks are 1-indexed so -1 is used to index into arrray's
-    const gameweek = parseInt(game["event"])-1
-
-    if (info["fixtures"][homeTeam][gameweek] === null) {
-      info["fixtures"][homeTeam][gameweek] = [{"opp": awayTeam, "isFinished": isFinished}]
-    } else { // accounts for double gameweeks
-      info["fixtures"][homeTeam][gameweek] = [info["fixtures"][homeTeam][gameweek][0], {"opp": awayTeam, "isFinished": isFinished}]
-    }
-    
-    if (info["fixtures"][awayTeam][gameweek] === null) {
-      info["fixtures"][awayTeam][gameweek] = [{"opp": homeTeam, "isFinished": isFinished}]
-    } else { // accounts for double gameweeks
-      info["fixtures"][awayTeam][gameweek] = [info["fixtures"][awayTeam][gameweek][0], {"opp": homeTeam, "isFinished": isFinished}]
-    }
-    
-    // if the current game has been played, add the scores to the two team's
-    if(isFinished) {
-      const homeTeamScore = game["team_h_score"]
-      const awayTeamScore = game["team_a_score"]
-      info["gf"][homeTeam] += homeTeamScore
-      info["ga"][homeTeam] += awayTeamScore
-      info["gf"][awayTeam] += awayTeamScore
-      info["ga"][awayTeam] += homeTeamScore
+    // if a match is postponed, the event will be null. We only want to add games that are being played
+    if (game["event"] != null) {
+      // gameweeks are 1-indexed so -1 is used to index into arrray's
+      const gameweek = parseInt(game["event"])-1
+      if (info["fixtures"][homeTeam][gameweek] === null) {
+        info["fixtures"][homeTeam][gameweek] = [{"opp": awayTeam, "isFinished": isFinished}]
+      } else { // accounts for double gameweeks
+        info["fixtures"][homeTeam][gameweek] = [info["fixtures"][homeTeam][gameweek][0], {"opp": awayTeam, "isFinished": isFinished}]
+      }
+      if (info["fixtures"][awayTeam][gameweek] === null) {
+        info["fixtures"][awayTeam][gameweek] = [{"opp": homeTeam, "isFinished": isFinished}]
+      } else { // accounts for double gameweeks
+        info["fixtures"][awayTeam][gameweek] = [info["fixtures"][awayTeam][gameweek][0], {"opp": homeTeam, "isFinished": isFinished}]
+      }
+      // if the current game has been played, add the scores to the two team's
+      if(isFinished) {
+        const homeTeamScore = game["team_h_score"]
+        const awayTeamScore = game["team_a_score"]
+        info["gf"][homeTeam] += homeTeamScore
+        info["ga"][homeTeam] += awayTeamScore
+        info["gf"][awayTeam] += awayTeamScore
+        info["ga"][awayTeam] += homeTeamScore
+      }
     }
     return info
   }
@@ -328,11 +333,11 @@ class App extends Component {
       this.state.view === "Attackers" ?
         (<Table colors={this.state.gaColors} display={this.state.attackersDisplay} />) :
         this.state.view === "Home" ?
-        (<div>Welcome to the Premier League Fantasy Tool Website by Connor Inglis </div>) :
+        (<Home />) :
         (<div>Loading...</div>)
   }
 
-  renderScreen = () => {
+  renderDesktopScreen = () => {
     return (
       <div>
         <Navbar sticky="top" expand="lg" bg="light" variant="light">
@@ -348,19 +353,19 @@ class App extends Component {
   }
 
   renderMobileScreen = () => {
-    return (<div>ON MOBILE</div>)
+    return (<div>Mobile site being developed {this.renderDesktopScreen()}</div>)
   }
 
   render () {
     return this.state.isMobile ?
       this.renderMobileScreen() :
-      this.renderScreen()
+      this.renderDesktopScreen()
   }
 }
 
 export default App;
 
-let teamCodesInverted = {
+let teamCodes = {
   1: "ARS",
   2: "AVL",
   3: "BOU",
