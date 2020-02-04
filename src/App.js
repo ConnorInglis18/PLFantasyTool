@@ -349,9 +349,14 @@ class App extends Component {
 
   renderDesktopScreen = () => {
     const sections = [
+
+      { title: '', onClick: this.showHome },
       { title: 'Home', onClick: this.showHome },
+      { title: ' ', onClick: this.showHome },
       { title: 'Defenders', onClick: this.showDefenders },
+      { title: '  ', onClick: this.showDefenders },
       { title: 'Attackers', onClick: this.showAttackers },
+      { title: '  ', onClick: this.showAttackers },
     ];
 
     return (
