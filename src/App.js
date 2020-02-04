@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Table from './Table.js';
 import Home from './Home.js';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './Header.js';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import './App.css';
 
 class App extends Component {
@@ -22,6 +22,7 @@ class App extends Component {
       isMobile: false,
     }
   }
+
 
   componentDidMount() {
     this.loadData()
@@ -328,27 +329,39 @@ class App extends Component {
   }
 
   showDisplay = () => {
+    const mainFeaturedPost = {
+      title: 'FPL Scheduling Tool',
+      description:
+        "This tool shows the goals for and against, rather than the opponent they are playing",
+      image: './PL_Banner.jpg',
+      imgText: '',
+      linkText: '',
+    };
+
     return this.state.view === "Defenders" ?
       (<Table colors={this.state.gfColors} display={this.state.defendersDisplay} />) :
       this.state.view === "Attackers" ?
         (<Table colors={this.state.gaColors} display={this.state.attackersDisplay} />) :
         this.state.view === "Home" ?
-        (<Home />) :
+        (<Home post={mainFeaturedPost}/>) :
         (<div>Loading...</div>)
   }
 
   renderDesktopScreen = () => {
+    const sections = [
+      { title: 'Home', onClick: this.showHome },
+      { title: 'Defenders', onClick: this.showDefenders },
+      { title: 'Attackers', onClick: this.showAttackers },
+    ];
+
     return (
-      <div>
-        <Navbar sticky="top" expand="lg" bg="light" variant="light">
-          <Navbar.Brand onClick={this.showHome}>Premier League Fantasy Tool</Navbar.Brand>
-          <Nav className="mr-auto">
-            <Nav.Link onClick={this.showDefenders}>Defenders</Nav.Link>
-            <Nav.Link onClick={this.showAttackers}>Attackers</Nav.Link>
-          </Nav>
-        </Navbar>
-        {this.showDisplay()}
-      </div>
+      <React.Fragment>
+        <CssBaseline />
+        <Container maxWidth="lg">
+          <Header title="FPL Tool" sections={sections}/>
+          {this.showDisplay()}
+        </Container>
+      </React.Fragment>
     )
   }
 
