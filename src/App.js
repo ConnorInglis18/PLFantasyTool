@@ -375,9 +375,10 @@ class App extends Component {
   }
 
   render () {
-    return this.state.isMobile ?
-      this.renderMobileScreen() :
-      this.renderDesktopScreen()
+    // return this.state.isMobile ?
+    //   this.renderMobileScreen() :
+    //   this.renderDesktopScreen()
+    return this.renderDesktopScreen();
   }
 }
 
