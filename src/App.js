@@ -25,9 +25,30 @@ class App extends Component {
 
 
   componentDidMount() {
+    // this.getTeam()
     this.loadData()
     this.isMobile()
   }
+
+  // async getTeam() {
+  //   // const axios = require('axios').default;
+  //   // axios.post('https://cors-anywhere.herokuapp.com/https://users.premierleague.com/accounts/login/?password=Rockstar12498&login=cinglis@indy.rr.com&redirect_uri=https://fantasy.premierleague.com/a/login&app=plfpl-web'
+  //   // ).then(response => {
+  //   //     console.log(response);
+  //   //   }).catch(response => {
+  //   //     console.log(response);
+  //   //   })
+
+  //   let url = 'https://cors-anywhere.herokuapp.com/https://users.premierleague.com/accounts/login/?password=Rockstar12498&login=cinglis@indy.rr.com&redirect_uri=https://fantasy.premierleague.com/a/login&app=plfpl-web'
+  //   await fetch(url, {
+
+  //   }).then(response => {
+  //     console.log(response)
+  //     console.log(response.headers)
+  //   })
+  //   console.log("HELLO")
+  //   await fetch("https://cors-anywhere.herokuapp.com/https://fantasy.premierleague.com/api/my-team/657945").then(response=>{console.log(response)})
+  // }
 
   loadData() {
     const getPlayersResults = this.getPlayers()
@@ -237,7 +258,7 @@ class App extends Component {
   }
 
   createColorBrackets = (info) => {
-    const numColors = 5
+    const numColors = 7
     // gf colors
     const gf = Object.values(info["gf"]).sort()
     // get max and min of gf array
@@ -349,14 +370,17 @@ class App extends Component {
 
   renderDesktopScreen = () => {
     const sections = [
+      // { title: '', onClick: this.showHome },
+      // { title: 'Home', onClick: this.showHome },
+      // { title: ' ', onClick: this.showHome },
+      // { title: 'Defenders', onClick: this.showDefenders },
+      // { title: '  ', onClick: this.showDefenders },
+      // { title: 'Attackers', onClick: this.showAttackers },
+      // { title: '  ', onClick: this.showAttackers },
 
-      { title: '', onClick: this.showHome },
       { title: 'Home', onClick: this.showHome },
-      { title: ' ', onClick: this.showHome },
       { title: 'Defenders', onClick: this.showDefenders },
-      { title: '  ', onClick: this.showDefenders },
       { title: 'Attackers', onClick: this.showAttackers },
-      { title: '  ', onClick: this.showAttackers },
     ];
 
     return (

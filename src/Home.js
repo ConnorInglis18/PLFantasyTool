@@ -57,6 +57,9 @@ export default function Home(props) {
               {post.linkText}
             </Link>
           </div>
+          <div className={classes.homeContent}>
+            Hello
+          </div>
         </Grid>
       </Grid>
     </Paper>

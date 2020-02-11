@@ -15,20 +15,58 @@ class Table extends Component {
     }
   }
 
+  // getColor = (goals, colors) => {
+  //   switch(true) {
+  //     case(colors[0][0] <= goals && goals <= colors[0][1]):
+  //       return styles.darkred
+  //     case(colors[1][0] <= goals && goals <= colors[1][1]):
+  //       return styles.red
+  //     case(colors[2][0] <= goals && goals <= colors[2][1]):
+  //       return styles.grey
+  //     case(colors[3][0] <= goals && goals <= colors[3][1]):
+  //       return styles.green
+  //     case(colors[4][0] <= goals && goals <= colors[4][1]):
+  //       return styles.darkgreen
+  //     default: // used if the number is -1
+  //       return styles.darkgrey
+  //   }
+  // }
+
   getColor = (goals, colors) => {
-    switch(true) {
-      case(colors[0][0] <= goals && goals <= colors[0][1]):
-        return styles.darkred
-      case(colors[1][0] <= goals && goals <= colors[1][1]):
-        return styles.red
-      case(colors[2][0] <= goals && goals <= colors[2][1]):
-        return styles.grey
-      case(colors[3][0] <= goals && goals <= colors[3][1]):
-        return styles.green
-      case(colors[4][0] <= goals && goals <= colors[4][1]):
-        return styles.darkgreen
-      default: // used if the number is -1
-        return styles.darkgrey
+    if (colors.length === 5) {
+      switch(true) {
+        case(colors[0][0] <= goals && goals <= colors[0][1]):
+          return styles.darkred
+        case(colors[1][0] <= goals && goals <= colors[1][1]):
+          return styles.red
+        case(colors[2][0] <= goals && goals <= colors[2][1]):
+          return styles.grey
+        case(colors[3][0] <= goals && goals <= colors[3][1]):
+          return styles.green
+        case(colors[4][0] <= goals && goals <= colors[4][1]):
+          return styles.darkgreen
+        default: // used if the number is -1
+          return styles.darkgrey
+      }
+    } else {
+      switch(true) {
+        case(colors[0][0] <= goals && goals <= colors[0][1]):
+          return styles.darkred
+        case(colors[1][0] <= goals && goals <= colors[1][1]):
+          return styles.red
+        case(colors[2][0] <= goals && goals <= colors[2][1]):
+          return styles.lightred
+        case(colors[3][0] <= goals && goals <= colors[3][1]):
+          return styles.grey
+        case(colors[4][0] <= goals && goals <= colors[4][1]):
+          return styles.lightgreen
+        case(colors[5][0] <= goals && goals <= colors[5][1]):
+          return styles.green
+        case(colors[6][0] <= goals && goals <= colors[6][1]):
+          return styles.darkgreen
+        default: // used if the number is -1
+          return styles.darkgrey
+      }
     }
   }
  
@@ -118,21 +156,24 @@ const styles = {
     color: "darkgrey"
   },
   darkred: {
-    background: "#861D46",
-    color: "white",
+    background: "#ec2727",
   },
   red: {
-    background: "#FF005A",
-    color: "white",
+    background: "#f26666",
+  },
+  lightred: {
+    background: "#f9b5b5",
   },
   grey: {
     background: "#EBEBE4",
   },
+  lightgreen: {
+    background: "#6cea70",
+  },
   green: {
-    background: "#00ff86",
+    background: "#30e235",
   },
   darkgreen: {
-    background: "#02894E",
-    color: "white",
+    background: "#1bc020",
   },
 }
