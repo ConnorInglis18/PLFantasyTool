@@ -49,6 +49,7 @@ export default function Header(props) {
       <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
         {sections.map(section => (
           <Link
+            title={section.title}
             color="inherit"
             noWrap
             key={section.title}

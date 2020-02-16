@@ -270,13 +270,16 @@ class App extends Component {
     }
     info["gfColors"] = this.makeSubsets(gf, gfRange)
     // reverse the ordering to make the colors easier to handle
-    let tmp = info["gfColors"][0]
-    info["gfColors"][0] = info["gfColors"][4];
-    info["gfColors"][4] = tmp;
-    tmp = info["gfColors"][1]
-    info["gfColors"][1] = info["gfColors"][3];
-    info["gfColors"][3] = tmp;
-    // // ga colors
+    let left = 0;
+    let right = info["gfColors"].length;
+    while (left < right) {
+      let tmp = info["gfColors"][left]
+      info["gfColors"][left] = info["gfColors"][right];
+      info["gfColors"][right] = tmp;
+      ++left;
+      --right;
+    }
+    // ga colors
     const ga = Object.values(info["ga"]).sort()
     const maxGA = Math.max.apply(null, ga)
     const minGA = Math.min.apply(null, ga)
@@ -285,6 +288,17 @@ class App extends Component {
       gaRange -= 1
     }
     info["gaColors"] = this.makeSubsets(ga, gaRange)
+    // make sure none of the ranges are undefined which can occur if 6 or less colors are needed to cover the entire range
+    for (let i = info["gfColors"].length; i >= 0; --i) {
+      if (info["gfColors"][i] === undefined) {
+        info["gfColors"].splice(i,1)
+      }
+    }
+    for (let i = info["gaColors"].length; i >= 0; --i) {
+      if (info["gaColors"][i] === undefined) {
+        info["gaColors"].splice(i,1)
+      }
+    }
   }
 
   createDefendersDisplay = (info) => {
@@ -330,22 +344,11 @@ class App extends Component {
       }
     })
   }
-
-  showDefenders = (e) => {
-    this.setState({
-      view: "Defenders",
-    })
-  }
-
-  showAttackers = (e) => {
-    this.setState({
-      view: "Attackers",
-    })
-  }
   
-  showHome = (e) => {
+  selectView = (event) => {
+    event.preventDefault()
     this.setState({
-      view: "Home",
+      view: event.target.title,
     })
   }
 
@@ -370,17 +373,9 @@ class App extends Component {
 
   renderDesktopScreen = () => {
     const sections = [
-      // { title: '', onClick: this.showHome },
-      // { title: 'Home', onClick: this.showHome },
-      // { title: ' ', onClick: this.showHome },
-      // { title: 'Defenders', onClick: this.showDefenders },
-      // { title: '  ', onClick: this.showDefenders },
-      // { title: 'Attackers', onClick: this.showAttackers },
-      // { title: '  ', onClick: this.showAttackers },
-
-      { title: 'Home', onClick: this.showHome },
-      { title: 'Defenders', onClick: this.showDefenders },
-      { title: 'Attackers', onClick: this.showAttackers },
+      { title: 'Home', onClick: this.selectView },
+      { title: 'Defenders', onClick: this.selectView },
+      { title: 'Attackers', onClick: this.selectView },
     ];
 
     return (

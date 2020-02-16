@@ -15,40 +15,80 @@ class Table extends Component {
     }
   }
 
-  // getColor = (goals, colors) => {
-  //   switch(true) {
-  //     case(colors[0][0] <= goals && goals <= colors[0][1]):
-  //       return styles.darkred
-  //     case(colors[1][0] <= goals && goals <= colors[1][1]):
-  //       return styles.red
-  //     case(colors[2][0] <= goals && goals <= colors[2][1]):
-  //       return styles.grey
-  //     case(colors[3][0] <= goals && goals <= colors[3][1]):
-  //       return styles.green
-  //     case(colors[4][0] <= goals && goals <= colors[4][1]):
-  //       return styles.darkgreen
-  //     default: // used if the number is -1
-  //       return styles.darkgrey
-  //   }
-  // }
-
   getColor = (goals, colors) => {
-    if (colors.length === 5) {
+    if (colors.length === 1) {
+      switch(true) {
+        case(colors[0][0] <= goals && goals <= colors[0][1]):
+          return styles.grey
+        default: // used if the number is -1
+          return styles.darkgrey
+      }
+    } else if (colors.length === 2) {
+      switch(true) {
+        case(colors[0][0] <= goals && goals <= colors[0][1]):
+          return styles.lightred
+        case(colors[1][0] <= goals && goals <= colors[1][1]):
+          return styles.lightgreen
+        default: // used if the number is -1
+          return styles.darkgrey
+      }
+    } else if (colors.length === 3) {
+      switch(true) {
+        case(colors[0][0] <= goals && goals <= colors[0][1]):
+          return styles.lightred
+        case(colors[1][0] <= goals && goals <= colors[1][1]):
+          return styles.grey
+        case(colors[2][0] <= goals && goals <= colors[2][1]):
+          return styles.lightgreen
+        default: // used if the number is -1
+          return styles.darkgrey
+      }
+    } else if (colors.length === 4) {
+      switch(true) {
+        case(colors[0][0] <= goals && goals <= colors[0][1]):
+          return styles.red
+        case(colors[1][0] <= goals && goals <= colors[1][1]):
+          return styles.lightred
+        case(colors[2][0] <= goals && goals <= colors[2][1]):
+          return styles.lightgreen
+        case(colors[3][0] <= goals && goals <= colors[3][1]):
+          return styles.green
+        default: // used if the number is -1
+          return styles.darkgrey
+      }
+    } else if (colors.length === 5) {
+      switch(true) {
+        case(colors[0][0] <= goals && goals <= colors[0][1]):
+          return styles.red
+        case(colors[1][0] <= goals && goals <= colors[1][1]):
+          return styles.lightred
+        case(colors[2][0] <= goals && goals <= colors[2][1]):
+          return styles.grey
+        case(colors[3][0] <= goals && goals <= colors[3][1]):
+          return styles.lightgreen
+        case(colors[4][0] <= goals && goals <= colors[4][1]):
+          return styles.green
+        default: // used if the number is -1
+          return styles.darkgrey
+      }
+    } else if (colors.length === 6) {
       switch(true) {
         case(colors[0][0] <= goals && goals <= colors[0][1]):
           return styles.darkred
         case(colors[1][0] <= goals && goals <= colors[1][1]):
           return styles.red
         case(colors[2][0] <= goals && goals <= colors[2][1]):
-          return styles.grey
+          return styles.lightred
         case(colors[3][0] <= goals && goals <= colors[3][1]):
-          return styles.green
+          return styles.lightgreen
         case(colors[4][0] <= goals && goals <= colors[4][1]):
+          return styles.green
+        case(colors[5][0] <= goals && goals <= colors[5][1]):
           return styles.darkgreen
         default: // used if the number is -1
           return styles.darkgrey
       }
-    } else {
+    } else /* colors.length === 7 */ {
       switch(true) {
         case(colors[0][0] <= goals && goals <= colors[0][1]):
           return styles.darkred
@@ -129,6 +169,7 @@ const styles = {
     flexFlow: "column no-wrap",
     alignItems: "stretch",
     background: "lightgrey",
+    overflowX: "auto",
   },
   column: {
     textAlign: "center",
@@ -171,9 +212,9 @@ const styles = {
     background: "#6cea70",
   },
   green: {
-    background: "#30e235",
+    background: "#1bc020",
   },
   darkgreen: {
-    background: "#1bc020",
+    background: "#169a1a",
   },
 }
