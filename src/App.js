@@ -28,6 +28,30 @@ class App extends Component {
     // this.getTeam()
     this.loadData()
     this.isMobile()
+    this.connectToBackend()
+  }
+
+  connectToBackend = () => {
+    let data = {
+      username: 'username',
+      password: 'password',
+    }
+    fetch("http://localhost:5000/getUserData", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+    .then((response) => {
+      console.log(response)
+      if (!response.ok) throw Error(response.statusText);
+          return response.json();
+      })
+    .then((data) => {
+      console.log(data)
+    })
+    .catch(error => console.log(error)); // eslint-disable-line no-console 
   }
 
   // async getTeam() {
