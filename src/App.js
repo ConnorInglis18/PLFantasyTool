@@ -48,6 +48,7 @@ class App extends Component {
   // takes in a game and the previous info, which contains
   // fixtures, gf, ga
   // fixtures - dictionary of team keys, value is array of size 38 (for each match)
+  // * Fixtures is now 47 to account for COVID
   // gf, ga - dictionary of team keys, value is that teams gf and ga
   addGameInfo = (game, info) => {
     const homeTeam = teamCodes[game["team_h"]];
