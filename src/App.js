@@ -14,7 +14,9 @@ class App extends Component {
       gf: [],
       ga: [],
       defendersDisplay: [],
+      defendersDisplayReduced: {},
       attackersDisplay: [],
+      attackersDisplayReduced: {},
       gfColors: [],
       gaColors: [],
       view: "Home",
@@ -289,6 +291,8 @@ class App extends Component {
         }
       }
     });
+    // FOR COVID
+    this.reduceDefendersDisplay();
   };
 
   createAttackersDisplay = (info) => {
@@ -315,12 +319,37 @@ class App extends Component {
         }
       }
     });
+    // FOR COVID
+    this.reduceAttackersDisplay();
   };
 
   selectView = (event) => {
     event.preventDefault();
     this.setState({
       view: event.target.title,
+    });
+  };
+
+  reduceDefendersDisplay = () => {
+    const dd = this.state.defendersDisplay;
+    const ddr = this.state.defendersDisplayReduced;
+
+    for (const key in dd) {
+      ddr[key] = dd[key].slice(38, 48);
+    }
+    this.setState({
+      defendersDisplayReduced: ddr,
+    });
+  };
+  reduceAttackersDisplay = () => {
+    const ad = this.state.attackersDisplay;
+    const adr = this.state.attackersDisplayReduced;
+
+    for (const key in ad) {
+      adr[key] = ad[key].slice(38, 48);
+    }
+    this.setState({
+      attackersDisplayReduced: adr,
     });
   };
 
@@ -337,12 +366,14 @@ class App extends Component {
     return this.state.view === "Defenders" ? (
       <Table
         colors={this.state.gfColors}
-        display={this.state.defendersDisplay}
+        // display={this.state.defendersDisplay}
+        display={this.state.defendersDisplayReduced}
       />
     ) : this.state.view === "Attackers" ? (
       <Table
         colors={this.state.gaColors}
-        display={this.state.attackersDisplay}
+        // display={this.state.attackersDisplay}
+        display={this.state.attackersDisplayReduced}
       />
     ) : this.state.view === "Home" ? (
       <Home post={mainFeaturedPost} />
