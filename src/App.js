@@ -14,7 +14,9 @@ class App extends Component {
       gf: [],
       ga: [],
       defendersDisplay: [],
+      defendersDisplayReduced: {},
       attackersDisplay: [],
+      attackersDisplayReduced: {},
       gfColors: [],
       gaColors: [],
       view: "Home",
@@ -48,6 +50,7 @@ class App extends Component {
   // takes in a game and the previous info, which contains
   // fixtures, gf, ga
   // fixtures - dictionary of team keys, value is array of size 38 (for each match)
+  // * Fixtures is now 47 to account for COVID
   // gf, ga - dictionary of team keys, value is that teams gf and ga
   addGameInfo = (game, info) => {
     const homeTeam = teamCodes[game["team_h"]];
@@ -95,68 +98,68 @@ class App extends Component {
   getSchedule = () => {
     let info = {
       fixtures: {
-        ARS: new Array(38).fill(null),
-        AVL: new Array(38).fill(null),
-        BHA: new Array(38).fill(null),
-        BUR: new Array(38).fill(null),
-        CHE: new Array(38).fill(null),
-        CRY: new Array(38).fill(null),
-        EVE: new Array(38).fill(null),
-        FUL: new Array(38).fill(null),
-        LEI: new Array(38).fill(null),
-        LEE: new Array(38).fill(null),
-        LIV: new Array(38).fill(null),
-        MCI: new Array(38).fill(null),
-        MUN: new Array(38).fill(null),
-        NEW: new Array(38).fill(null),
-        SHU: new Array(38).fill(null),
-        SOU: new Array(38).fill(null),
-        TOT: new Array(38).fill(null),
-        WBA: new Array(38).fill(null),
-        WHU: new Array(38).fill(null),
-        WOL: new Array(38).fill(null),
+        ARS: new Array(47).fill(null),
+        AVL: new Array(47).fill(null),
+        BOU: new Array(47).fill(null),
+        BHA: new Array(47).fill(null),
+        BUR: new Array(47).fill(null),
+        CHE: new Array(47).fill(null),
+        CRY: new Array(47).fill(null),
+        EVE: new Array(47).fill(null),
+        LEI: new Array(47).fill(null),
+        LIV: new Array(47).fill(null),
+        MCY: new Array(47).fill(null),
+        MUN: new Array(47).fill(null),
+        NEW: new Array(47).fill(null),
+        NOR: new Array(47).fill(null),
+        SHE: new Array(47).fill(null),
+        SOU: new Array(47).fill(null),
+        TOT: new Array(47).fill(null),
+        WAT: new Array(47).fill(null),
+        WHU: new Array(47).fill(null),
+        WOL: new Array(47).fill(null),
       },
       gf: {
         ARS: 0,
         AVL: 0,
+        BOU: 0,
         BHA: 0,
         BUR: 0,
         CHE: 0,
         CRY: 0,
         EVE: 0,
-        FUL: 0,
         LEI: 0,
-        LEE: 0,
         LIV: 0,
-        MCI: 0,
+        MCY: 0,
         MUN: 0,
         NEW: 0,
-        SHU: 0,
+        NOR: 0,
+        SHE: 0,
         SOU: 0,
         TOT: 0,
-        WBA: 0,
+        WAT: 0,
         WHU: 0,
         WOL: 0,
       },
       ga: {
         ARS: 0,
         AVL: 0,
+        BOU: 0,
         BHA: 0,
         BUR: 0,
         CHE: 0,
         CRY: 0,
         EVE: 0,
-        FUL: 0,
         LEI: 0,
-        LEE: 0,
         LIV: 0,
-        MCI: 0,
+        MCY: 0,
         MUN: 0,
         NEW: 0,
-        SHU: 0,
+        NOR: 0,
+        SHE: 0,
         SOU: 0,
         TOT: 0,
-        WBA: 0,
+        WAT: 0,
         WHU: 0,
         WOL: 0,
       },
@@ -223,7 +226,7 @@ class App extends Component {
   createColorBrackets = (info) => {
     const numColors = 7;
     // gf colors
-    const gf = Object.values(info["gf"]).sort((a,b) => {return a-b});
+    const gf = Object.values(info["gf"]).sort();
     // get max and min of gf array
     const maxGF = Math.max.apply(null, gf);
     const minGF = Math.min.apply(null, gf);
@@ -243,17 +246,14 @@ class App extends Component {
       --right;
     }
     // ga colors
-    const ga = Object.values(info["ga"]).sort((a,b) => {return a-b});
+    const ga = Object.values(info["ga"]).sort();
     const maxGA = Math.max.apply(null, ga);
     const minGA = Math.min.apply(null, ga);
-    console.log(maxGA)
-    console.log(minGA)
     let gaRange = Math.ceil((maxGA - minGA) / numColors) + 1;
     while (this.canMakeSubsets(ga, numColors, gaRange - 1)) {
       gaRange -= 1;
     }
     info["gaColors"] = this.makeSubsets(ga, gaRange);
-    console.log(info["gaColors"])
     // make sure none of the ranges are undefined which can occur if 6 or less colors are needed to cover the entire range
     for (let i = info["gfColors"].length; i >= 0; --i) {
       if (info["gfColors"][i] === undefined) {
@@ -265,7 +265,6 @@ class App extends Component {
         info["gaColors"].splice(i, 1);
       }
     }
-    console.log(info["gfColors"])
   };
 
   createDefendersDisplay = (info) => {
@@ -273,8 +272,8 @@ class App extends Component {
     const defendersDisplay = info["defendersDisplay"];
     const gf = info["gf"];
     Object.keys(fixtures).forEach((team) => {
-      defendersDisplay[team] = new Array(38);
-      for (let week = 0; week < 38; ++week) {
+      defendersDisplay[team] = new Array(47);
+      for (let week = 0; week < 47; ++week) {
         if (fixtures[team][week] === null) {
           defendersDisplay[team][week] = -1;
         } else if (fixtures[team][week].length > 1) {
@@ -292,6 +291,8 @@ class App extends Component {
         }
       }
     });
+    // FOR COVID
+    this.reduceDefendersDisplay();
   };
 
   createAttackersDisplay = (info) => {
@@ -299,8 +300,8 @@ class App extends Component {
     const attackersDisplay = info["attackersDisplay"];
     const ga = info["ga"];
     Object.keys(fixtures).forEach((team) => {
-      attackersDisplay[team] = new Array(38);
-      for (let week = 0; week < 38; ++week) {
+      attackersDisplay[team] = new Array(47);
+      for (let week = 0; week < 47; ++week) {
         if (fixtures[team][week] === null) {
           attackersDisplay[team][week] = -1;
         } else if (fixtures[team][week].length > 1) {
@@ -318,12 +319,37 @@ class App extends Component {
         }
       }
     });
+    // FOR COVID
+    this.reduceAttackersDisplay();
   };
 
   selectView = (event) => {
     event.preventDefault();
     this.setState({
       view: event.target.title,
+    });
+  };
+
+  reduceDefendersDisplay = () => {
+    const dd = this.state.defendersDisplay;
+    const ddr = this.state.defendersDisplayReduced;
+
+    for (const key in dd) {
+      ddr[key] = dd[key].slice(38, 48);
+    }
+    this.setState({
+      defendersDisplayReduced: ddr,
+    });
+  };
+  reduceAttackersDisplay = () => {
+    const ad = this.state.attackersDisplay;
+    const adr = this.state.attackersDisplayReduced;
+
+    for (const key in ad) {
+      adr[key] = ad[key].slice(38, 48);
+    }
+    this.setState({
+      attackersDisplayReduced: adr,
     });
   };
 
@@ -340,13 +366,15 @@ class App extends Component {
     return this.state.view === "Defenders" ? (
       <Table
         colors={this.state.gfColors}
-        display={this.state.defendersDisplay}
+        // display={this.state.defendersDisplay}
+        display={this.state.defendersDisplayReduced}
       />
     ) : this.state.view === "Attackers" ? (
       <Table
         colors={this.state.gaColors}
-        display={this.state.attackersDisplay}
-        />
+        // display={this.state.attackersDisplay}
+        display={this.state.attackersDisplayReduced}
+      />
     ) : this.state.view === "Home" ? (
       <Home post={mainFeaturedPost} />
     ) : (
