@@ -165,8 +165,7 @@ class Table extends Component {
   createHeaders = () => {
     let headers = [];
     headers.push("");
-    // TODO for (let i = 1; i < 48; ++i) {
-    for (let i = 39; i < 48; ++i) {
+    for (let i = 1; i < 39; ++i) {
       i < 10 ? headers.push("0" + i) : headers.push(i);
     }
     let mappedHeaders = headers.map((header) => {
