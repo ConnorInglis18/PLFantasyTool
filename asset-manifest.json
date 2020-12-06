@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/PLFantasyTool/static/css/main.692d75bb.chunk.css",
-    "main.js": "/PLFantasyTool/static/js/main.dd5e59ef.chunk.js",
-    "main.js.map": "/PLFantasyTool/static/js/main.dd5e59ef.chunk.js.map",
+    "main.js": "/PLFantasyTool/static/js/main.ebcee9e0.chunk.js",
+    "main.js.map": "/PLFantasyTool/static/js/main.ebcee9e0.chunk.js.map",
     "runtime-main.js": "/PLFantasyTool/static/js/runtime-main.b28881b5.js",
     "runtime-main.js.map": "/PLFantasyTool/static/js/runtime-main.b28881b5.js.map",
     "static/js/2.5d2d036c.chunk.js": "/PLFantasyTool/static/js/2.5d2d036c.chunk.js",
     "static/js/2.5d2d036c.chunk.js.map": "/PLFantasyTool/static/js/2.5d2d036c.chunk.js.map",
     "index.html": "/PLFantasyTool/index.html",
-    "precache-manifest.e27acec2761e742dcf5c617e792e0fd2.js": "/PLFantasyTool/precache-manifest.e27acec2761e742dcf5c617e792e0fd2.js",
+    "precache-manifest.d818c7ea6e6b41831a913f8db3024dbc.js": "/PLFantasyTool/precache-manifest.d818c7ea6e6b41831a913f8db3024dbc.js",
     "service-worker.js": "/PLFantasyTool/service-worker.js",
     "static/css/main.692d75bb.chunk.css.map": "/PLFantasyTool/static/css/main.692d75bb.chunk.css.map",
     "static/js/2.5d2d036c.chunk.js.LICENSE.txt": "/PLFantasyTool/static/js/2.5d2d036c.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.b28881b5.js",
     "static/js/2.5d2d036c.chunk.js",
     "static/css/main.692d75bb.chunk.css",
-    "static/js/main.dd5e59ef.chunk.js"
+    "static/js/main.ebcee9e0.chunk.js"
   ]
 }
