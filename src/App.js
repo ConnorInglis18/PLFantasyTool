@@ -246,14 +246,11 @@ class App extends Component {
     const ga = Object.values(info["ga"]).sort((a,b) => {return a-b});
     const maxGA = Math.max.apply(null, ga);
     const minGA = Math.min.apply(null, ga);
-    console.log(maxGA)
-    console.log(minGA)
     let gaRange = Math.ceil((maxGA - minGA) / numColors) + 1;
     while (this.canMakeSubsets(ga, numColors, gaRange - 1)) {
       gaRange -= 1;
     }
     info["gaColors"] = this.makeSubsets(ga, gaRange);
-    console.log(info["gaColors"])
     // make sure none of the ranges are undefined which can occur if 6 or less colors are needed to cover the entire range
     for (let i = info["gfColors"].length; i >= 0; --i) {
       if (info["gfColors"][i] === undefined) {
@@ -265,7 +262,6 @@ class App extends Component {
         info["gaColors"].splice(i, 1);
       }
     }
-    console.log(info["gfColors"])
   };
 
   createDefendersDisplay = (info) => {
@@ -341,11 +337,17 @@ class App extends Component {
       <Table
         colors={this.state.gfColors}
         display={this.state.defendersDisplay}
+        teamGoals={this.state.ga}
+        teamColors={this.state.gaColors}
+        type="DEFENDERS"
       />
     ) : this.state.view === "Attackers" ? (
       <Table
         colors={this.state.gaColors}
         display={this.state.attackersDisplay}
+        teamGoals={this.state.gf}
+        teamColors={this.state.gfColors}
+        type="ATTACKERS"
         />
     ) : this.state.view === "Home" ? (
       <Home post={mainFeaturedPost} />
@@ -360,8 +362,6 @@ class App extends Component {
       { title: "Defenders", onClick: this.selectView },
       { title: "Attackers", onClick: this.selectView },
     ];
-
-    console.log(this.state.defendersDisplay)
 
     return (
       <React.Fragment>

@@ -117,10 +117,132 @@ class Table extends Component {
     }
   };
 
-  createTable = (colors, display) => {
+  getColorReverse = (goals, colors) => {
+    if (colors.length === 1) {
+      switch (true) {
+        case colors[0][0] <= goals && goals <= colors[0][1]:
+          return styles.grey;
+        default:
+          // used if the number is -1
+          return styles.darkgrey;
+      }
+    } else if (colors.length === 2) {
+      switch (true) {
+        case colors[0][0] <= goals && goals <= colors[0][1]:
+          return styles.lightgreen;
+        case colors[1][0] <= goals && goals <= colors[1][1]:
+          return styles.lightred;
+        default:
+          // used if the number is -1
+          return styles.darkgrey;
+      }
+    } else if (colors.length === 3) {
+      switch (true) {
+        case colors[0][0] <= goals && goals <= colors[0][1]:
+          return styles.lightgreen;
+        case colors[1][0] <= goals && goals <= colors[1][1]:
+          return styles.grey;
+        case colors[2][0] <= goals && goals <= colors[2][1]:
+          return styles.lightred;
+        default:
+          // used if the number is -1
+          return styles.darkgrey;
+      }
+    } else if (colors.length === 4) {
+      switch (true) {
+        case colors[0][0] <= goals && goals <= colors[0][1]:
+          return styles.green;
+        case colors[1][0] <= goals && goals <= colors[1][1]:
+          return styles.lightgreen;
+        case colors[2][0] <= goals && goals <= colors[2][1]:
+          return styles.lightred;
+        case colors[3][0] <= goals && goals <= colors[3][1]:
+          return styles.red;
+        default:
+          // used if the number is -1
+          return styles.darkgrey;
+      }
+    } else if (colors.length === 5) {
+      switch (true) {
+        case colors[0][0] <= goals && goals <= colors[0][1]:
+          return styles.red;
+        case colors[1][0] <= goals && goals <= colors[1][1]:
+          return styles.lightred;
+        case colors[2][0] <= goals && goals <= colors[2][1]:
+          return styles.grey;
+        case colors[3][0] <= goals && goals <= colors[3][1]:
+          return styles.lightgreen;
+        case colors[4][0] <= goals && goals <= colors[4][1]:
+          return styles.green;
+        default:
+          // used if the number is -1
+          return styles.darkgrey;
+      }
+    } else if (colors.length === 6) {
+      switch (true) {
+        case colors[0][0] <= goals && goals <= colors[0][1]:
+          return styles.darkred;
+        case colors[1][0] <= goals && goals <= colors[1][1]:
+          return styles.red;
+        case colors[2][0] <= goals && goals <= colors[2][1]:
+          return styles.lightred;
+        case colors[3][0] <= goals && goals <= colors[3][1]:
+          return styles.lightgreen;
+        case colors[4][0] <= goals && goals <= colors[4][1]:
+          return styles.green;
+        case colors[5][0] <= goals && goals <= colors[5][1]:
+          return styles.darkgreen;
+        default:
+          // used if the number is -1
+          return styles.darkgrey;
+      }
+    } /* colors.length === 7 */ else {
+      switch (true) {
+        case colors[0][0] <= goals && goals <= colors[0][1]:
+          return styles.darkred;
+        case colors[1][0] <= goals && goals <= colors[1][1]:
+          return styles.red;
+        case colors[2][0] <= goals && goals <= colors[2][1]:
+          return styles.lightred;
+        case colors[3][0] <= goals && goals <= colors[3][1]:
+          return styles.grey;
+        case colors[4][0] <= goals && goals <= colors[4][1]:
+          return styles.lightgreen;
+        case colors[5][0] <= goals && goals <= colors[5][1]:
+          return styles.green;
+        case colors[6][0] <= goals && goals <= colors[6][1]:
+          return styles.darkgreen;
+        default:
+          // used if the number is -1
+          return styles.darkgrey;
+      }
+    }
+  };
+
+  createTable = (colors, display, teamGoals, teamColors) => {
+    // reverse the order of the team Colors
+    let left = 0;
+    let right = teamColors.length-1;
+    while (left < right) {
+      let tmp = teamColors[left];
+      teamColors[left] = teamColors[right];
+      teamColors[right] = tmp;
+      ++left;
+      --right;
+    }
+
     return Object.keys(display).map((team) => {
       return (
         <tr key={team}>
+          <td
+            style={Object.assign(
+              {},
+              this.getColor(teamGoals[team], teamColors),
+              styles.tableData
+            )}
+          >
+            {teamGoals[team]}
+          </td>
           <th>{team}</th>
           {display[team].map((goals, index) => {
             return typeof goals === "number" ? (
@@ -162,9 +284,15 @@ class Table extends Component {
     });
   };
 
-  createHeaders = () => {
+  createHeaders = (type) => {
     let headers = [];
-    headers.push("");
+    if (type === "DEFENDERS") {
+      headers.push("GA");
+    } else {
+      headers.push("GF");
+    }
+    
+    headers.push("Team");
     for (let i = 1; i < 39; ++i) {
       i < 10 ? headers.push("0" + i) : headers.push(i);
     }
@@ -183,8 +311,8 @@ class Table extends Component {
       <div style={styles.background}>
         <table>
           <tbody>
-            {this.createHeaders()}
-            {this.createTable(this.props.colors, this.props.display)}
+            {this.createHeaders(this.props.type)}
+            {this.createTable(this.props.colors, this.props.display, this.props.teamGoals, this.props.teamColors)}
           </tbody>
         </table>
       </div>
