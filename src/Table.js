@@ -220,17 +220,6 @@ class Table extends Component {
   };
 
   createTable = (colors, display, teamGoals, teamColors) => {
-    // reverse the order of the team Colors
-    let left = 0;
-    let right = teamColors.length-1;
-    while (left < right) {
-      let tmp = teamColors[left];
-      teamColors[left] = teamColors[right];
-      teamColors[right] = tmp;
-      ++left;
-      --right;
-    }
-
     return Object.keys(display).map((team) => {
       return (
         <tr key={team}>
@@ -306,13 +295,28 @@ class Table extends Component {
     return <tr>{mappedHeaders}</tr>;
   };
 
+  reverseColors = (teamColors) => {
+    // reverse the order of the team Colors
+    let left = 0;
+    let right = teamColors.length-1;
+    while (left < right) {
+      let tmp = teamColors[left];
+      teamColors[left] = teamColors[right];
+      teamColors[right] = tmp;
+      ++left;
+      --right;
+    }
+  }
+
   render() {
     return (
       <div style={styles.background}>
         <table>
           <tbody>
+            {this.reverseColors(this.props.teamColors)}
             {this.createHeaders(this.props.type)}
             {this.createTable(this.props.colors, this.props.display, this.props.teamGoals, this.props.teamColors)}
+            {this.reverseColors(this.props.teamColors)}
           </tbody>
         </table>
       </div>
