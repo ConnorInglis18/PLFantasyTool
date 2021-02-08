@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/PLFantasyTool/static/css/main.692d75bb.chunk.css",
-    "main.js": "/PLFantasyTool/static/js/main.c54324d4.chunk.js",
-    "main.js.map": "/PLFantasyTool/static/js/main.c54324d4.chunk.js.map",
+    "main.js": "/PLFantasyTool/static/js/main.d0eb2dc6.chunk.js",
+    "main.js.map": "/PLFantasyTool/static/js/main.d0eb2dc6.chunk.js.map",
     "runtime-main.js": "/PLFantasyTool/static/js/runtime-main.b28881b5.js",
     "runtime-main.js.map": "/PLFantasyTool/static/js/runtime-main.b28881b5.js.map",
-    "static/js/2.5d2d036c.chunk.js": "/PLFantasyTool/static/js/2.5d2d036c.chunk.js",
-    "static/js/2.5d2d036c.chunk.js.map": "/PLFantasyTool/static/js/2.5d2d036c.chunk.js.map",
+    "static/js/2.d591894d.chunk.js": "/PLFantasyTool/static/js/2.d591894d.chunk.js",
+    "static/js/2.d591894d.chunk.js.map": "/PLFantasyTool/static/js/2.d591894d.chunk.js.map",
     "index.html": "/PLFantasyTool/index.html",
-    "precache-manifest.79b75a8d329452eba0bf62830b199aa1.js": "/PLFantasyTool/precache-manifest.79b75a8d329452eba0bf62830b199aa1.js",
+    "precache-manifest.2503a67b10cbc0083956ff984a7fed65.js": "/PLFantasyTool/precache-manifest.2503a67b10cbc0083956ff984a7fed65.js",
     "service-worker.js": "/PLFantasyTool/service-worker.js",
     "static/css/main.692d75bb.chunk.css.map": "/PLFantasyTool/static/css/main.692d75bb.chunk.css.map",
-    "static/js/2.5d2d036c.chunk.js.LICENSE.txt": "/PLFantasyTool/static/js/2.5d2d036c.chunk.js.LICENSE.txt"
+    "static/js/2.d591894d.chunk.js.LICENSE.txt": "/PLFantasyTool/static/js/2.d591894d.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.b28881b5.js",
-    "static/js/2.5d2d036c.chunk.js",
+    "static/js/2.d591894d.chunk.js",
     "static/css/main.692d75bb.chunk.css",
-    "static/js/main.c54324d4.chunk.js"
+    "static/js/main.d0eb2dc6.chunk.js"
   ]
 }
