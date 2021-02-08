@@ -1,9 +1,8 @@
 import React, { Component } from "react";
+import Cell from './Cell';
 
 class Table extends Component {
   createTable = (display) => {
-    // let high = 95;
-    // let item = JSON.stringify({"background": `hsl(0, 65%, ${high}%)`});
     return Object.keys(display).map((team) => {
       team = display[team];
       return (
@@ -13,34 +12,12 @@ class Table extends Component {
           </td>
           <th>{team["short_name"]}</th>
           {team["upcoming_fixtures"].map((weekArray, index) => {
-            if (weekArray.length === 1) {
-              return (
-                <td
-                  key={index}
-                  style={Object.assign({}, { background: weekArray[0]["color"] }, styles.tableData)}
-                >
-                  {weekArray[0]["value"]}
-                </td>
-              )
-            } if (weekArray.length === 0) {
-              return (
-                <td
-                  key={index}
-                  style={Object.assign({}, styles.darkgrey, styles.tableData)}
-                ></td>
-              )
-            } else { // double game week
-              return (
-                <td key={index} style={styles.doubleGame}>
-                  <div style={Object.assign({}, { background: weekArray[0]["color"] }, styles.doubleGameData)}>
-                    {weekArray[0]["value"]}
-                  </div>
-                  <div style={Object.assign({}, { background: weekArray[1]["color"] }, styles.doubleGameData)}>
-                    {weekArray[1]["value"]}
-                  </div>
-                </td>
-              )
-            }
+            return (
+              <Cell
+                weekArray={weekArray}
+                key={`${team["short_name"]}-${index}-${this.props.type}`}
+              />
+            )
           })}
         </tr>
       );

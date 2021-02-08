@@ -1,18 +1,20 @@
-import { fixturesUrl } from './urls';
+import { FIXTURES_URL } from './consts';
 
-export const updateTeamInfo = (teams, upcomingGameweek) => {
-  return fetch(fixturesUrl)
+export const updateTeamInfo = (teams, responseObject) => {
+  console.log("STARTING TO UPDATE TEAM INFO");
+  return fetch(FIXTURES_URL)
   .then((response) => {
     if (!response.ok) throw Error(response.statusText);
     return response.json();
   })
   .then((data) => {
-    return handleFixtures(data, teams, upcomingGameweek);
+    return handleFixtures(data, teams, responseObject);
   })
   .catch((error) => console.log(error)); // eslint-disable-line no-console
 }
 
-const handleFixtures = (fixtures, teams, upcomingGameweek) => {
+const handleFixtures = (fixtures, teams, responseObject) => {
+  console.log("STARTING TO HANDLE FIXTURES");
   for (let fixture in fixtures) {
     fixture = fixtures[fixture];
     const isFinished = fixture["finished"];
@@ -32,7 +34,7 @@ const handleFixtures = (fixtures, teams, upcomingGameweek) => {
         passed for gameweek 15, an owner cannot change his team for that gameweek.
         Only gameweek 16 and on is important in this example
       */
-      const segment = gameweek < upcomingGameweek ? "previous_opponents" : "future_opponents";
+      const segment = gameweek < responseObject["upcoming_gameweek"] ? "previous_opponents" : "future_opponents";
 
       // add fixtures
       teams[homeId][segment][gameweek].push(awayId);

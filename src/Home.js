@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function Home(props) {
   const classes = useStyles();
-  const { post } = props;
+  const { post, refreshData } = props;
 
   return (
     <Paper className={classes.home} style={{ backgroundImage: `url(${post.image})` }}>
@@ -58,7 +58,9 @@ export default function Home(props) {
             </Link>
           </div>
           <div className={classes.homeContent}>
-            Hello
+            <button onClick={refreshData}>
+              Refresh Data
+            </button>
           </div>
         </Grid>
       </Grid>

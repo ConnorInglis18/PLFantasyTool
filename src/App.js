@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import Table from "./Table.js";
 import Home from "./Home.js";
 import Header from "./Header.js";
+import UserTeam from "./UserTeam";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { loadData } from './backend/getFormData';
+import { fetchData } from './backend/getFormData';
 import "./App.css";
 
 class App extends Component {
@@ -13,19 +14,23 @@ class App extends Component {
     this.state = {
       defendersDisplay: [],
       attackersDisplay: [],
+      players: {},
       upcomingGameweek: 1,
       view: "Home",
     };
   }
 
   componentDidMount() {
-    loadData().then(res => {
+    fetchData().then(res => {
+      console.log(res);
       this.setState({
         defendersDisplay: res["defenders_display"],
         attackersDisplay: res["attackers_display"],
-        upcomingGameweek: res["upcoming_gameweek"]
+        upcomingGameweek: res["upcoming_gameweek"],
+        players: res["players"],
+        userTeams: res["user_teams"]
       });
-    });
+    })
   }
 
   selectView = (event) => {
@@ -40,7 +45,7 @@ class App extends Component {
       title: "FPL Scheduling Tool",
       description:
         "This tool shows the goals for and against, rather than the opponent they are playing",
-      image: "./PL_Banner.jpg",
+      image: "PL_Banner.jpg",
       imgText: "",
       linkText: "",
     };
@@ -58,7 +63,13 @@ class App extends Component {
         type="ATTACKERS"
       />
     ) : this.state.view === "Home" ? (
-      <Home post={mainFeaturedPost} />
+      <Home post={mainFeaturedPost} refreshData={this.refresh} />
+    ) : this.state.view === "Team" ? (
+      <UserTeam
+        players={this.state.players}
+        defendersDisplay={this.state.defendersDisplay}
+        attackersDisplay={this.state.attackersDisplay}
+      />
     ) : (
       <div>Error</div>
     );
@@ -69,6 +80,7 @@ class App extends Component {
       { title: "Home", onClick: this.selectView },
       { title: "Defenders", onClick: this.selectView },
       { title: "Attackers", onClick: this.selectView },
+      { title: "Team", onClick: this.selectView }
     ];
 
     return (

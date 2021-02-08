@@ -16,6 +16,7 @@ export const handleTeams = (teams, upcomingGameweek) => {
   for (const team in teams) {
     let teamId = teams[team]["id"];
     teamDict[teamId] = {
+      "team_id": teamId,
       "short_name": teams[team]["short_name"],
       "gf": 0,
       "ga": 0,
