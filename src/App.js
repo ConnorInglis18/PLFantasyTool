@@ -47,7 +47,6 @@ class App extends Component {
       title: "FPL Scheduling Tool",
       description:
         "This tool shows the goals for and against, rather than the opponent they are playing",
-      image: "PL_Banner.jpg",
       imgText: "",
       linkText: "",
     };

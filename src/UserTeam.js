@@ -29,12 +29,28 @@ class UserTeam extends Component {
     let userTeams = this.state.userTeams;
     const currentTeam = userTeams[this.state.currentTeamIndex];
     const index = currentTeam["players"].indexOf(e.target.id);
+    const id = e.target.id;
+    // Get the element so a visual indicator can be shown to the user when the button is pressed
+    const playerElt = document.getElementById("addPlayer"+id);
+    const originalBackgroundColor = playerElt.style.getPropertyValue("background-color");
     if (index === -1) { // make sure the player does not already exist in the current team
-      currentTeam["players"].push(e.target.id);
+      // Add player to team
+      currentTeam["players"].push(id);
+      // Give green flash visual indication the player was added
+      playerElt.style.setProperty("background-color", styles.green.background);
+      setTimeout(() => {
+        playerElt.style.setProperty("background-color", originalBackgroundColor);
+      }, 400)
+    } else {
+      // Give grey flash visual indication the player was already in the team
+      playerElt.style.setProperty("background-color", styles.headerRow.background);
+      setTimeout(() => {
+        playerElt.style.setProperty("background-color", originalBackgroundColor);
+      }, 400)
     }
-    userTeams[this.state.currentTeamIndex] = currentTeam
+    userTeams[this.state.currentTeamIndex] = currentTeam;
     this.setState({
-      userTeams: userTeams
+      userTeams: userTeams,
     });
     localStorage.setItem(TEAM_DATA_KEY, JSON.stringify(userTeams));
   }
@@ -210,24 +226,29 @@ class UserTeam extends Component {
                     <div style={styles.playerHeader}>{headers[index]}</div>
                     <table style={styles.tableBody}>
                       <thead style={styles.headerRow}>
-                        <th style={styles.playerColumn}>Name</th>
-                        <th style={styles.numberColumn}>Points</th>
-                        <th style={styles.numberColumn}>Cost</th>
-                        <th style={styles.numberColumn}></th>
+                        <tr>
+                          <th style={styles.playerColumn}>Name</th>
+                          <th style={styles.numberColumn}>Points</th>
+                          <th style={styles.numberColumn}>Cost</th>
+                          <th style={styles.numberColumn}></th>
+                        </tr>
                       </thead>
-                      {playerList.map((playerId, index) => {
-                      return (
-                        <tbody style={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
-                          <td style={styles.alignLeft}>{players[playerId]["web_name"]}</td>
-                          <td>{players[playerId]["total_points"]}</td>
-                          <td>{players[playerId]["now_cost"]}</td>
-                          <td style={styles.buttonPadding}>
-                            <button style={Object.assign({}, styles.circleButton, styles.green)} id={playerId} onClick={this.addPlayerToUserTeam}>
-                              + 
-                            </button></td>
-                        </tbody>
-                      )
-                    })}
+                      <tbody>
+                        {playerList.map((playerId, index) => {
+                          return (
+                            <tr key={"addPlayer" + playerId} id={"addPlayer" + playerId} style={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                                <td style={styles.alignLeft}>{players[playerId]["web_name"]}</td>
+                                <td>{players[playerId]["total_points"]}</td>
+                                <td>{players[playerId]["now_cost"]}</td>
+                                <td style={styles.buttonPadding}>
+                                  <button style={Object.assign({}, styles.circleButton, styles.green)} id={playerId} onClick={this.addPlayerToUserTeam}>
+                                    + 
+                                  </button>
+                                </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
                     </table>
                     
                     
