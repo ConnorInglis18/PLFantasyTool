@@ -1,5 +1,5 @@
 export const BOOTSTRAP_URL = "https://pl-fantasy-tool-cors.herokuapp.com/https://fantasy.premierleague.com/api/bootstrap-static/";
 export const FIXTURES_URL = "https://pl-fantasy-tool-cors.herokuapp.com/https://fantasy.premierleague.com/api/fixtures/";
 export const UPDATE_TIMES_KEY = "UPDATE_TIMES";
-export const TEAM_DATA_KEY = "TEAM_DATA";
+export const TEAM_DATA_KEY = "user_teams";
 export const BACKEND_DATA_KEY = "BACKEND_DATA";

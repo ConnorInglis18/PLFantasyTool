@@ -30,7 +30,7 @@ class App extends Component {
         upcomingGameweek: res["upcoming_gameweek"],
         players: res["players"],
         orderedPlayers: res["ordered_players"],
-        userTeams: res["user_teams"]
+        userTeams: res["user_teams"],
       });
     })
   }
@@ -67,6 +67,7 @@ class App extends Component {
       <Home post={mainFeaturedPost} refreshData={this.refresh} />
     ) : this.state.view === "Team" ? (
       <UserTeam
+        userTeams={this.state.userTeams}
         orderedPlayers={this.state.orderedPlayers}
         players={this.state.players}
         defendersDisplay={this.state.defendersDisplay}

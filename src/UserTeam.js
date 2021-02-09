@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Cell from './Cell';
-import { TEAM_DATA_KEY } from "./backend/consts"
+import { createTeam, addPlayerToUserTeam, removePlayerFromUserTeam } from "./backend/userTeam";
 // import PropTypes from "prop-types";
 
 class UserTeam extends Component {
@@ -14,60 +14,43 @@ class UserTeam extends Component {
   }
 
   componentDidMount() {
-    // get the userTeam from localStorage and set it as current state
-    let userTeams = localStorage.getItem(TEAM_DATA_KEY);
-    if (userTeams !== null) {
-      userTeams = JSON.parse(userTeams);
-      this.setState({
-        userTeams: userTeams
-      })
-    }
+    this.setState({
+      userTeams: this.props.userTeams,
+    });
   }
 
   addPlayerToUserTeam = (e) => {
     e.preventDefault();
-    let userTeams = this.state.userTeams;
-    const currentTeam = userTeams[this.state.currentTeamIndex];
-    const index = currentTeam["players"].indexOf(e.target.id);
-    const id = e.target.id;
+    const playerId = e.target.id;
     // Get the element so a visual indicator can be shown to the user when the button is pressed
-    const playerElt = document.getElementById("addPlayer"+id);
+    const playerElt = document.getElementById("addPlayer"+playerId);
     const originalBackgroundColor = playerElt.style.getPropertyValue("background-color");
-    if (index === -1) { // make sure the player does not already exist in the current team
-      // Add player to team
-      currentTeam["players"].push(id);
+    if (this.state.userTeams[this.state.currentTeamIndex]["players"].indexOf(playerId) === -1) { // make sure the player does not already exist in the current team
       // Give green flash visual indication the player was added
       playerElt.style.setProperty("background-color", styles.green.background);
       setTimeout(() => {
         playerElt.style.setProperty("background-color", originalBackgroundColor);
-      }, 400)
+      }, 400);
+      // Add the player to the team
+      let userTeams = addPlayerToUserTeam(playerId, this.state.currentTeamIndex);
+      this.setState({
+        userTeams: userTeams,
+      });
     } else {
       // Give grey flash visual indication the player was already in the team
       playerElt.style.setProperty("background-color", styles.headerRow.background);
       setTimeout(() => {
         playerElt.style.setProperty("background-color", originalBackgroundColor);
-      }, 400)
+      }, 400);
     }
-    userTeams[this.state.currentTeamIndex] = currentTeam;
-    this.setState({
-      userTeams: userTeams,
-    });
-    localStorage.setItem(TEAM_DATA_KEY, JSON.stringify(userTeams));
   }
 
   removePlayerFromUserTeam = (e) => {
     e.preventDefault();
-    let userTeams = this.state.userTeams;
-    let currentTeam = userTeams[this.state.currentTeamIndex];
-    const index = currentTeam["players"].indexOf(e.target.id);
-    if (index !== -1) { // make sure the item exists in list (it should)
-      currentTeam["players"].splice(index, 1); // remove element
-    }
-    userTeams[this.state.currentTeamIndex] = currentTeam;
+    let userTeams = removePlayerFromUserTeam(e.target.id, this.state.currentTeamIndex);
     this.setState({
       userTeams: userTeams
     });
-    localStorage.setItem(TEAM_DATA_KEY, JSON.stringify(userTeams));
   }
 
   handleTeamNameChange = (e) => {
@@ -78,18 +61,11 @@ class UserTeam extends Component {
   
   handleTeamNameSubmit = (e) => {
     e.preventDefault();
-    let userTeams = this.state.userTeams;
-    let newTeam = {
-      name: this.state.teamName,
-      players: []
-    };
-    // console.log(newTeam);
-    userTeams.push(newTeam);
+    let userTeams = createTeam(this.state.teamName);
     this.setState({
       userTeams: userTeams,
-      teamName: ""
-    })
-    localStorage.setItem(TEAM_DATA_KEY, JSON.stringify(userTeams));
+      teamName: "",
+    });
   }
 
   changeCurrentTeam = (index) => {
@@ -106,6 +82,7 @@ class UserTeam extends Component {
     if (this.state.userTeams.length && defendersDisplay.length) {
       let userTeam = this.state.userTeams[this.state.currentTeamIndex];
       userTeam["players"].forEach(playerId => {
+        console.log(playerId)
         let playerDisplay = {}
         playerDisplay["player_id"] = playerId
         playerDisplay["web_name"] = players[playerId]["web_name"];
