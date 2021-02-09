@@ -165,25 +165,35 @@ class UserTeam extends Component {
             {userTeamDisplay.map((positionGroup, index) => {
               return (
                 <div key={headers[index]}>
-                  {headers[index]}
                   <table>
-                    <tbody>
-                      {positionGroup.map((player) => {
+                    <thead>
+                      <tr style={styles.headerRow}>
+                        <th style={styles.numberColumn}>Price</th>
+                        <th style={styles.numberColumn}>Points</th>
+                        <th style={styles.playerColumn}>Name</th>
+                        <th>{headers[index]}</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody style={styles.tableBody}>
+                      {positionGroup.map((player, index) => {
                         return (
-                          <tr key={player["player_id"]}>
-                            <td style={{width: "40px"}}>{player["now_cost"]}</td>
-                            <td style={{width: "40px"}}>{player["total_points"]}</td>
-                            <th style={{width: "110px"}}>{player["web_name"]}</th>
-                            {player["upcoming_fixtures"].map((weekArray, index) => {
-                              return (
-                                <Cell
-                                  weekArray={weekArray}
-                                  key={`${player["web_name"]}-${index}`}
-                                />
-                              )
-                            })}
+                          <tr key={player["player_id"]} style={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                            <td>{player["now_cost"]}</td>
+                            <td>{player["total_points"]}</td>
+                            <th>{player["web_name"]}</th>
                             <td>
-                              <button style={{marginLeft: "20px", background: "rgb(247, 166, 166)", height: "20px", width: "20px", borderRadius: "20px"}} id={player["player_id"]} onClick={this.removePlayerFromUserTeam}>
+                              {player["upcoming_fixtures"].map((weekArray, index) => {
+                                return (
+                                  <Cell
+                                    weekArray={weekArray}
+                                    key={`${player["web_name"]}-${index}`}
+                                  />
+                                )
+                              })}
+                            </td>
+                            <td style={styles.drop}>
+                              <button style={{background: "rgb(247, 166, 166)", height: "20px", width: "20px", borderRadius: "20px"}} id={player["player_id"]} onClick={this.removePlayerFromUserTeam}>
                                 -
                               </button>
                             </td>
@@ -228,7 +238,6 @@ const styles = {
   teamSelection: {
     paddingTop: 0,
     marginTop: 0,
-    background: "lightgrey",
   },
   teamButton: {
     background: "white",
@@ -240,6 +249,30 @@ const styles = {
     height: "100%",
   },
   selectedTeam: {
-    background: "lightgrey"
+    background: "silver",
+    fontWeight: "bold",
+  },
+  tableBody: {
+    textAlign: "center",
+    verticalAlign: "center",
+  },
+  headerRow: {
+    background: "silver",
+    height: "30px",
+  },
+  evenRow: {
+    background: "gainsboro",
+  },
+  oddRow: {
+    background: "whitesmoke",
+  },
+  numberColumn: {
+    width: "45px",
+  },
+  playerColumn: {
+    width: "135px",
+  },
+  drop: {
+    padding: "10px"
   }
 }
