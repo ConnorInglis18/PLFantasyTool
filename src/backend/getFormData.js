@@ -28,7 +28,9 @@ export const fetchData = () => {
       console.log(data)
       const upcomingGameweek = handleEvents(data["events"]);
       let teams = handleTeams(data["teams"], upcomingGameweek);
-      responseObject["players"] = handlePlayers(data["elements"], upcomingGameweek);
+      const handlePlayersObj = handlePlayers(data["elements"], upcomingGameweek);
+      responseObject["ordered_players"] = handlePlayersObj["playerList"];
+      responseObject["players"] = handlePlayersObj["playerDict"];
       responseObject["upcoming_gameweek"] = upcomingGameweek;
       return updateTeamInfo(teams, responseObject);
     })

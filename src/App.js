@@ -15,6 +15,7 @@ class App extends Component {
       defendersDisplay: [],
       attackersDisplay: [],
       players: {},
+      orderedPlayers: [],
       upcomingGameweek: 1,
       view: "Home",
     };
@@ -28,6 +29,7 @@ class App extends Component {
         attackersDisplay: res["attackers_display"],
         upcomingGameweek: res["upcoming_gameweek"],
         players: res["players"],
+        orderedPlayers: res["ordered_players"],
         userTeams: res["user_teams"]
       });
     })
@@ -66,6 +68,7 @@ class App extends Component {
       <Home post={mainFeaturedPost} refreshData={this.refresh} />
     ) : this.state.view === "Team" ? (
       <UserTeam
+        orderedPlayers={this.state.orderedPlayers}
         players={this.state.players}
         defendersDisplay={this.state.defendersDisplay}
         attackersDisplay={this.state.attackersDisplay}

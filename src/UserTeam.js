@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import Cell from './Cell';
 import { TEAM_DATA_KEY } from "./backend/consts"
-import { withTheme } from "@material-ui/core";
-import { grey } from "@material-ui/core/colors";
 // import PropTypes from "prop-types";
 
 class UserTeam extends Component {
@@ -69,7 +67,7 @@ class UserTeam extends Component {
       name: this.state.teamName,
       players: []
     };
-    console.log(newTeam);
+    // console.log(newTeam);
     userTeams.push(newTeam);
     this.setState({
       userTeams: userTeams,
@@ -86,12 +84,11 @@ class UserTeam extends Component {
 
 
   render() {
-    const { players, defendersDisplay, attackersDisplay } = this.props;
-    const allPlayersArray = Object.values(players).sort((a, b) => a["element_type"] - b["element_type"] || b["total_points"] - a["total_points"]);
+    const { orderedPlayers, players, defendersDisplay, attackersDisplay } = this.props;
+    // TODO: Move this to the backend
     let userTeamDisplay = [[], [], [], []] // 4 arrays for 4 player types (goalkeepers = 1 / go in 0th array);
     if (this.state.userTeams.length && defendersDisplay.length) {
       let userTeam = this.state.userTeams[this.state.currentTeamIndex];
-      console.log(userTeam);
       userTeam["players"].forEach(playerId => {
         let playerDisplay = {}
         playerDisplay["player_id"] = playerId
@@ -100,7 +97,6 @@ class UserTeam extends Component {
         playerDisplay["team_id"] = teamId;
         playerDisplay["total_points"] = players[playerId]["total_points"];
         playerDisplay["now_cost"] = players[playerId]["now_cost"];
-        console.log(players[playerId]);
         // TODO: Add jerseys and team logo
         const element_type = players[playerId]["element_type"];
         if (element_type <= 2) { // defender or goalie
@@ -132,90 +128,113 @@ class UserTeam extends Component {
           </div> : 
           // if there are players in the user team, render the table
           <>
-          <div style={styles.teamInfo}>
-            <div>
-              Teams:
-              {this.state.userTeams.map((team, index) => {
-                if (index === this.state.currentTeamIndex) {
-                  return (
-                    // TODO: Fix styling
-                    <button key={"navbar-" + team["name"]} style={Object.assign({}, styles.teamButton, styles.selectedTeam)} onClick={() => this.changeCurrentTeam(index)}>
-                      {team["name"]}
-                    </button>
-                  )
-                } else {
-                  return (
-                    // TODO: Fix styling
-                    <button key={"navbar-" + team["name"]} style={styles.teamButton} onClick={() => this.changeCurrentTeam(index)}>
-                      {team["name"]}
-                    </button>
-                  )
-                }
+            <div style={styles.teamInfo}>
+              <div>
+                Teams:
+                {this.state.userTeams.map((team, index) => {
+                  if (index === this.state.currentTeamIndex) {
+                    return (
+                      // TODO: Fix styling
+                      <button key={"navbar-" + team["name"]} style={Object.assign({}, styles.teamButton, styles.selectedTeam)} onClick={() => this.changeCurrentTeam(index)}>
+                        {team["name"]}
+                      </button>
+                    )
+                  } else {
+                    return (
+                      // TODO: Fix styling
+                      <button key={"navbar-" + team["name"]} style={styles.teamButton} onClick={() => this.changeCurrentTeam(index)}>
+                        {team["name"]}
+                      </button>
+                    )
+                  }
+                })}
+              </div>
+              <form style={styles.newTeamForm} onSubmit={this.handleTeamNameSubmit}>
+                <label>
+                  Add New Team
+                  <input type="text" name="teamName" value={this.state.teamName} onChange={this.handleTeamNameChange} />
+                </label>
+                <input type="submit" value="Submit" />
+              </form>
+            </div>
+            <div style={styles.teamSelection}>
+              {userTeamDisplay.map((positionGroup, index) => {
+                return (
+                  <div key={headers[index]}>
+                    <table>
+                      <thead>
+                        <tr style={styles.headerRow}>
+                          <th style={styles.numberColumn}>Price</th>
+                          <th style={styles.numberColumn}>Points</th>
+                          <th style={styles.playerColumn}>Name</th>
+                          <th>{headers[index]}</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+                      <tbody style={styles.tableBody}>
+                        {positionGroup.map((player, index) => {
+                          return (
+                            <tr key={player["player_id"]} style={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                              <td>{player["now_cost"]}</td>
+                              <td>{player["total_points"]}</td>
+                              <th>{player["web_name"]}</th>
+                              {/* TODO: Don't put a td inside of a td */}
+                              <td>
+                                {player["upcoming_fixtures"].map((weekArray, index) => {
+                                  return (
+                                    <Cell
+                                      weekArray={weekArray}
+                                      key={`${player["web_name"]}-${index}`}
+                                    />
+                                  )
+                                })}
+                              </td>
+                              <td style={styles.buttonPadding}>
+                                <button style={Object.assign({}, styles.circleButton, styles.red)} id={player["player_id"]} onClick={this.removePlayerFromUserTeam}>
+                                  -
+                                </button>
+                              </td>
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )
               })}
             </div>
-            <form style={styles.newTeamForm} onSubmit={this.handleTeamNameSubmit}>
-              <label>
-                Add New Team
-                <input type="text" name="teamName" value={this.state.teamName} onChange={this.handleTeamNameChange} />
-              </label>
-              <input type="submit" value="Submit" />
-            </form>
-          </div>
-          <div style={styles.teamSelection}>
-            {userTeamDisplay.map((positionGroup, index) => {
-              return (
-                <div key={headers[index]}>
-                  <table>
-                    <thead>
-                      <tr style={styles.headerRow}>
-                        <th style={styles.numberColumn}>Price</th>
-                        <th style={styles.numberColumn}>Points</th>
+            <div style={styles.playerSelectionArea}>
+              {orderedPlayers.map((playerList, index) => {
+                return (
+                  <div key={"playerList" + index}>
+                    <div style={styles.playerHeader}>{headers[index]}</div>
+                    <table style={styles.tableBody}>
+                      <thead style={styles.headerRow}>
                         <th style={styles.playerColumn}>Name</th>
-                        <th>{headers[index]}</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody style={styles.tableBody}>
-                      {positionGroup.map((player, index) => {
-                        return (
-                          <tr key={player["player_id"]} style={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
-                            <td>{player["now_cost"]}</td>
-                            <td>{player["total_points"]}</td>
-                            <th>{player["web_name"]}</th>
-                            <td>
-                              {player["upcoming_fixtures"].map((weekArray, index) => {
-                                return (
-                                  <Cell
-                                    weekArray={weekArray}
-                                    key={`${player["web_name"]}-${index}`}
-                                  />
-                                )
-                              })}
-                            </td>
-                            <td style={styles.drop}>
-                              <button style={{background: "rgb(247, 166, 166)", height: "20px", width: "20px", borderRadius: "20px"}} id={player["player_id"]} onClick={this.removePlayerFromUserTeam}>
-                                -
-                              </button>
-                            </td>
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              )
-            })}
-          </div>
-          {allPlayersArray.map((player) => {
-            return (
-              <div key={"AllPlayers-" + player["player_id"]}>
-                <button style={{background: "rgb(114, 235, 118)", height: "20px", width: "20px", borderRadius: "20px"}} id={player["player_id"]} onClick={this.addPlayerToUserTeam}>
-                + 
-                </button>
-                {`   ${player["web_name"]}      Total Points: ${player["total_points"]}`}
-              </div>
-            )
-          })}
+                        <th style={styles.numberColumn}>Points</th>
+                        <th style={styles.numberColumn}>Cost</th>
+                        <th style={styles.numberColumn}></th>
+                      </thead>
+                      {playerList.map((playerId, index) => {
+                      return (
+                        <tbody style={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                          <td style={styles.alignLeft}>{players[playerId]["web_name"]}</td>
+                          <td>{players[playerId]["total_points"]}</td>
+                          <td>{players[playerId]["now_cost"]}</td>
+                          <td style={styles.buttonPadding}>
+                            <button style={Object.assign({}, styles.circleButton, styles.green)} id={playerId} onClick={this.addPlayerToUserTeam}>
+                              + 
+                            </button></td>
+                        </tbody>
+                      )
+                    })}
+                    </table>
+                    
+                    
+                  </div>
+                )
+              })}
+            </div>
           </>
         }
       </div>
@@ -270,9 +289,37 @@ const styles = {
     width: "45px",
   },
   playerColumn: {
-    width: "135px",
+    width: "130px",
   },
-  drop: {
-    padding: "10px"
+  buttonPadding: {
+    padding: "10px",
+  },
+  circleButton: {
+    height: "20px",
+    width: "20px",
+    borderRadius: "20px",
+    cursor: "pointer",
+  },
+  red: {
+    background: "rgb(247, 166, 166)",
+  },
+  green: {
+    background: "rgb(114, 235, 118)",
+  },
+  playerHeader: {
+    textAlign: "center",
+    background: "silver",
+    height: "40px",
+    paddingTop: "10px",
+    fontWeight: "bold",
+  },
+  playerSelectionArea: {
+    marginTop: "50px",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  alignLeft: {
+    textAlign: "left",
+    paddingLeft: "5px"
   }
 }
