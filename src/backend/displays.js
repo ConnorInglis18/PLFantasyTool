@@ -1,5 +1,5 @@
 import { BACKEND_DATA_KEY } from "./consts";
-import { getUserTeams } from "./userTeam";
+import { createUserTeamsDisplay, getUserTeams } from "./userTeam";
 
 const ColorBarsType = {
   HIGH_GOOD: 1,
@@ -84,8 +84,7 @@ export const createDisplays = (teams, responseObject) => {
   // write backend object to local storage / db
   localStorage.setItem(BACKEND_DATA_KEY, JSON.stringify(responseObject));
   
-  // TODO: create the userTeams display
-  responseObject["user_teams"] = getUserTeams();
+  responseObject["user_teams"] = createUserTeamsDisplay();
   return responseObject;
 }
 

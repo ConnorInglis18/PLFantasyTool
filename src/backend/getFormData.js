@@ -2,7 +2,7 @@ import { updateTeamInfo } from './fixtures';
 import { handlePlayers } from './players';
 import { handleEvents, handleTeams } from './bootstrap';
 import { createDisplays } from './displays';
-import { getUserTeams } from './userTeam';
+import { createUserTeamsDisplay, getUserTeams } from './userTeam';
 import { BACKEND_DATA_KEY, BOOTSTRAP_URL, FIXTURES_URL, UPDATE_TIMES_KEY } from './consts';
 
 export const fetchData = () => {
@@ -41,7 +41,7 @@ export const fetchData = () => {
   } else { // if we already have data, we will return that data as the response object
     return new Promise(function(resolve, reject) {
       let responseObject = JSON.parse(backendData);
-      responseObject["user_teams"] = getUserTeams();
+      responseObject["user_teams"] = createUserTeamsDisplay();
       resolve(responseObject);
       reject(refreshData);
     })

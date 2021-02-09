@@ -18,6 +18,7 @@ class App extends Component {
       orderedPlayers: [],
       upcomingGameweek: 1,
       view: "Home",
+      loading: true,
     };
   }
 
@@ -31,6 +32,7 @@ class App extends Component {
         players: res["players"],
         orderedPlayers: res["ordered_players"],
         userTeams: res["user_teams"],
+        loading: false
       });
     })
   }
@@ -51,7 +53,9 @@ class App extends Component {
       linkText: "",
     };
 
-    return this.state.view === "Defenders" ? (
+    return this.state.loading ? (
+      <div>Loading</div>
+    ) : this.state.view === "Defenders" ? (
       <Table
         display={this.state.defendersDisplay}
         upcomingGameweek={this.state.upcomingGameweek}
@@ -67,11 +71,8 @@ class App extends Component {
       <Home post={mainFeaturedPost} refreshData={this.refresh} />
     ) : this.state.view === "Team" ? (
       <UserTeam
-        userTeams={this.state.userTeams}
         orderedPlayers={this.state.orderedPlayers}
         players={this.state.players}
-        defendersDisplay={this.state.defendersDisplay}
-        attackersDisplay={this.state.attackersDisplay}
       />
     ) : (
       <div>Error</div>

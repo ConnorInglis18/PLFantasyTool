@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Cell from './Cell';
-import { createTeam, addPlayerToUserTeam, removePlayerFromUserTeam } from "./backend/userTeam";
+import { createTeam, addPlayerToUserTeam, removePlayerFromUserTeam, isPlayerInUserTeam, createUserTeamsDisplay } from "./backend/userTeam";
 // import PropTypes from "prop-types";
 
 class UserTeam extends Component {
@@ -15,7 +15,7 @@ class UserTeam extends Component {
 
   componentDidMount() {
     this.setState({
-      userTeams: this.props.userTeams,
+      userTeams: createUserTeamsDisplay(),
     });
   }
 
@@ -25,7 +25,7 @@ class UserTeam extends Component {
     // Get the element so a visual indicator can be shown to the user when the button is pressed
     const playerElt = document.getElementById("addPlayer"+playerId);
     const originalBackgroundColor = playerElt.style.getPropertyValue("background-color");
-    if (this.state.userTeams[this.state.currentTeamIndex]["players"].indexOf(playerId) === -1) { // make sure the player does not already exist in the current team
+    if (isPlayerInUserTeam(playerId, this.state.currentTeamIndex)) { // make sure the player does not already exist in the current team
       // Give green flash visual indication the player was added
       playerElt.style.setProperty("background-color", styles.green.background);
       setTimeout(() => {
@@ -76,34 +76,8 @@ class UserTeam extends Component {
 
 
   render() {
-    const { orderedPlayers, players, defendersDisplay, attackersDisplay } = this.props;
-    // TODO: Move this to the backend
-    let userTeamDisplay = [[], [], [], []] // 4 arrays for 4 player types (goalkeepers = 1 / go in 0th array);
-    if (this.state.userTeams.length && defendersDisplay.length) {
-      let userTeam = this.state.userTeams[this.state.currentTeamIndex];
-      userTeam["players"].forEach(playerId => {
-        console.log(playerId)
-        let playerDisplay = {}
-        playerDisplay["player_id"] = playerId
-        playerDisplay["web_name"] = players[playerId]["web_name"];
-        let teamId = players[playerId]["team_id"];
-        playerDisplay["team_id"] = teamId;
-        playerDisplay["total_points"] = players[playerId]["total_points"];
-        playerDisplay["now_cost"] = players[playerId]["now_cost"];
-        // TODO: Add jerseys and team logo
-        const element_type = players[playerId]["element_type"];
-        if (element_type <= 2) { // defender or goalie
-          playerDisplay["upcoming_fixtures"] = defendersDisplay[teamId-1]["upcoming_fixtures"]; // -1 b/c pl uses 1-index
-        } else { // midfielder or forward
-          playerDisplay["upcoming_fixtures"] = attackersDisplay[teamId-1]["upcoming_fixtures"]; // -1 b/c pl uses 1-index
-        }
-        // put the player in the proper position array (goalie element type 1 goes in 0th indexed array)
-        userTeamDisplay[element_type-1].push(playerDisplay); // -1 b/c pl uses 1-index
-      });
-    }
-
+    const { orderedPlayers, players } = this.props;
     const headers = ["GOALKEEPERS", "DEFENDERS", "MIDFIELDERS", "FORWARDS"];
-    
     return (
       <div>
         {
@@ -127,14 +101,12 @@ class UserTeam extends Component {
                 {this.state.userTeams.map((team, index) => {
                   if (index === this.state.currentTeamIndex) {
                     return (
-                      // TODO: Fix styling
                       <button key={"navbar-" + team["name"]} style={Object.assign({}, styles.teamButton, styles.selectedTeam)} onClick={() => this.changeCurrentTeam(index)}>
                         {team["name"]}
                       </button>
                     )
                   } else {
                     return (
-                      // TODO: Fix styling
                       <button key={"navbar-" + team["name"]} style={styles.teamButton} onClick={() => this.changeCurrentTeam(index)}>
                         {team["name"]}
                       </button>
@@ -151,9 +123,10 @@ class UserTeam extends Component {
               </form>
             </div>
             <div style={styles.teamSelection}>
-              {userTeamDisplay.map((positionGroup, index) => {
+              {/* Display the current team selected */}
+              {this.state.userTeams[this.state.currentTeamIndex]["players"].map((positionGroup, index) => {
                 return (
-                  <div key={headers[index]}>
+                  <div key={"Current Team" + headers[index]}>
                     <table>
                       <thead>
                         <tr style={styles.headerRow}>
