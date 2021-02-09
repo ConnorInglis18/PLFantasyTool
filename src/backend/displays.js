@@ -1,4 +1,5 @@
 import { BACKEND_DATA_KEY } from "./consts";
+import { getUserTeams } from "./userTeam";
 
 const ColorBarsType = {
   HIGH_GOOD: 1,
@@ -14,7 +15,6 @@ const maxRedLightness = 85;
 const minRedLightness = 54;
 
 export const createDisplays = (teams, responseObject) => {
-  console.log("STARTING CREATE DISPLAYS");
   // create the goals for and goals against arrays using the teams object
   let gfArray = [];
   let gaArray = [];
@@ -81,8 +81,11 @@ export const createDisplays = (teams, responseObject) => {
     responseObject["defenders_display"].push(defendersDisplay);
     responseObject["attackers_display"].push(attackersDisplay);
   }
-  // write object to local storage / db
+  // write backend object to local storage / db
   localStorage.setItem(BACKEND_DATA_KEY, JSON.stringify(responseObject));
+  
+  // TODO: create the userTeams display
+  responseObject["user_teams"] = getUserTeams();
   return responseObject;
 }
 

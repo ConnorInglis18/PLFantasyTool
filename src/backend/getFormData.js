@@ -3,7 +3,7 @@ import { handlePlayers } from './players';
 import { handleEvents, handleTeams } from './bootstrap';
 import { createDisplays } from './displays';
 import { getUserTeams } from './userTeam';
-import { BACKEND_DATA_KEY, BOOTSTRAP_URL, FIXTURES_URL, TEAM_DATA_KEY, UPDATE_TIMES_KEY } from './consts';
+import { BACKEND_DATA_KEY, BOOTSTRAP_URL, FIXTURES_URL, UPDATE_TIMES_KEY } from './consts';
 
 export const fetchData = () => {
   // Check if there is an UPDATE_TIMES array for the user
@@ -32,7 +32,6 @@ export const fetchData = () => {
       responseObject["ordered_players"] = handlePlayersObj["playerList"];
       responseObject["players"] = handlePlayersObj["playerDict"];
       responseObject["upcoming_gameweek"] = upcomingGameweek;
-      responseObject[TEAM_DATA_KEY] = getUserTeams()
       return updateTeamInfo(teams, responseObject);
     })
     .then((teams) => {
@@ -41,7 +40,9 @@ export const fetchData = () => {
     .catch((error) => console.log(error))
   } else { // if we already have data, we will return that data as the response object
     return new Promise(function(resolve, reject) {
-      resolve(JSON.parse(backendData));
+      let responseObject = JSON.parse(backendData);
+      responseObject["user_teams"] = getUserTeams();
+      resolve(responseObject);
       reject(refreshData);
     })
   }
@@ -82,7 +83,6 @@ export const refreshData = () => {
     responseObject["ordered_players"] = handlePlayersObj["playerList"];
     responseObject["players"] = handlePlayersObj["playerDict"];
     responseObject["upcoming_gameweek"] = upcomingGameweek;
-    responseObject["user_teams"] = getUserTeams()
     return updateTeamInfo(teams, responseObject);
   })
   .then((teams) => {
