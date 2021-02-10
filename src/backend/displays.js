@@ -1,5 +1,5 @@
 import { BACKEND_DATA_KEY } from "./consts";
-import { createUserTeamsDisplay, getUserTeams } from "./userTeam";
+import { createUserTeamsDisplay } from "./userTeam";
 
 const ColorBarsType = {
   HIGH_GOOD: 1,

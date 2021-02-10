@@ -2,7 +2,7 @@ import { updateTeamInfo } from './fixtures';
 import { handlePlayers } from './players';
 import { handleEvents, handleTeams } from './bootstrap';
 import { createDisplays } from './displays';
-import { createUserTeamsDisplay, getUserTeams } from './userTeam';
+import { createUserTeamsDisplay } from './userTeam';
 import { BACKEND_DATA_KEY, BOOTSTRAP_URL, FIXTURES_URL, UPDATE_TIMES_KEY } from './consts';
 
 export const fetchData = () => {

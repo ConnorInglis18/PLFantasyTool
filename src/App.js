@@ -19,6 +19,7 @@ class App extends Component {
       upcomingGameweek: 1,
       view: "Home",
       loading: true,
+      // isMobile: false
     };
   }
 
@@ -32,7 +33,8 @@ class App extends Component {
         players: res["players"],
         orderedPlayers: res["ordered_players"],
         userTeams: res["user_teams"],
-        loading: false
+        loading: false,
+        // isMobile: (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1)
       });
     })
   }

@@ -76,41 +76,5 @@ const styles = {
     textAlign: "center",
     border: "1px solid black",
     fontSize: "1vw",
-  },
-  doubleGame: {
-    border: "1px solid black",
-    width: "2.2vw",
-  },
-  doubleGameData: {
-    height: "2vh",
-    fontSize: ".75vw",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  darkgrey: {
-    background: "darkgrey",
-    color: "darkgrey",
-  },
-  // darkred: {
-  //   background: "#ec2727",
-  // },
-  // red: {
-  //   background: "#f26666",
-  // },
-  // lightred: {
-  //   background: "#f9b5b5",
-  // },
-  // grey: {
-  //   background: "#EBEBE4",
-  // },
-  // lightgreen: {
-  //   background: "#6cea70",
-  // },
-  // green: {
-  //   background: "#1bc020",
-  // },
-  // darkgreen: {
-  //   background: "#169a1a",
-  // },
+  }
 };

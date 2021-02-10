@@ -36,7 +36,7 @@ export default Cell;
 
 const styles = {
   tableData: {
-    height: "4vh",
+    height: "30px",
     width: "2.2vw",
     textAlign: "center",
     border: "1px solid black",
@@ -45,9 +45,13 @@ const styles = {
   doubleGame: {
     border: "1px solid black",
     width: "2.2vw",
+    height: "30px",
+    padding: "0px",
   },
   doubleGameData: {
-    height: "2vh",
+    height: "15px",
+    margin: "0px",
+    padding: "0px",
     fontSize: ".75vw",
     display: "flex",
     alignItems: "center",

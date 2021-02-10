@@ -133,8 +133,8 @@ class UserTeam extends Component {
                           <th style={styles.numberColumn}>Price</th>
                           <th style={styles.numberColumn}>Points</th>
                           <th style={styles.playerColumn}>Name</th>
-                          <th>{headers[index]}</th>
-                          <th></th>
+                          <th style={styles.fixturesColumn}>{headers[index]}</th>
+                          <th style={styles.numberColumn}></th>
                         </tr>
                       </thead>
                       <tbody style={styles.tableBody}>
@@ -146,14 +146,22 @@ class UserTeam extends Component {
                               <th>{player["web_name"]}</th>
                               {/* TODO: Don't put a td inside of a td */}
                               <td>
-                                {player["upcoming_fixtures"].map((weekArray, index) => {
-                                  return (
-                                    <Cell
-                                      weekArray={weekArray}
-                                      key={`${player["web_name"]}-${index}`}
-                                    />
-                                  )
-                                })}
+                                <div>
+                                  <table>
+                                    <tbody>
+                                      <tr>
+                                        {player["upcoming_fixtures"].map((weekArray, index) => {
+                                          return (
+                                            <Cell
+                                              weekArray={weekArray}
+                                              key={`${player["web_name"]}-${index}`}
+                                            />
+                                          )
+                                        })}
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
                               </td>
                               <td style={styles.buttonPadding}>
                                 <button style={Object.assign({}, styles.circleButton, styles.red)} id={player["player_id"]} onClick={this.removePlayerFromUserTeam}>
@@ -199,9 +207,7 @@ class UserTeam extends Component {
                           )
                         })}
                       </tbody>
-                    </table>
-                    
-                    
+                    </table>          
                   </div>
                 )
               })}
@@ -261,6 +267,9 @@ const styles = {
   },
   playerColumn: {
     width: "130px",
+  },
+  fixturesColumn: {
+    width: "65%",
   },
   buttonPadding: {
     padding: "10px",
