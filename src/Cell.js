@@ -37,14 +37,14 @@ export default Cell;
 const styles = {
   tableData: {
     height: "30px",
-    width: "2.2vw",
+    width: "30px",
     textAlign: "center",
     border: "1px solid black",
-    fontSize: "1vw",
+    fontSize: "12px",
   },
   doubleGame: {
     border: "1px solid black",
-    width: "2.2vw",
+    width: "30px",
     height: "30px",
     padding: "0px",
   },
@@ -52,7 +52,7 @@ const styles = {
     height: "15px",
     margin: "0px",
     padding: "0px",
-    fontSize: ".75vw",
+    fontSize: "12px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

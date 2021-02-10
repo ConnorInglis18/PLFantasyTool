@@ -266,10 +266,12 @@ const styles = {
     width: "45px",
   },
   playerColumn: {
+    minWidth: "100px",
     width: "130px",
   },
   fixturesColumn: {
     width: "65%",
+    overflowX: "auto",
   },
   buttonPadding: {
     padding: "10px",
